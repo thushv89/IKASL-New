@@ -47,7 +47,7 @@ public class IKASLRun {
         allINames = new ArrayList<ArrayList<String>>();
         allIWeights = new ArrayList<ArrayList<double[]>>();
         
-        parser = new NumericalDataParser();
+        parser = new NumericalDataParser(tListener);
         learner = new IKASLLearner(tListener);
         generalizer = new IKASLGeneralizer(tListener);
     
@@ -60,7 +60,7 @@ public class IKASLRun {
         allINames = new ArrayList<ArrayList<String>>();
         allIWeights = new ArrayList<ArrayList<double[]>>();
         
-        parser = new NumericalDataParser();
+        parser = new NumericalDataParser(tListener);
         learner = new IKASLLearner(tListener);
         generalizer = new IKASLGeneralizer(tListener);
         
@@ -78,7 +78,7 @@ public class IKASLRun {
 
     public void runSingleStep() {
 
-        parser.parseInput(dir + File.separator + "input" + (currLC+1) + ".txt");
+        parser.parseInput(dir + File.separator + "input" + (currLC+1) + ".csv");
         ArrayList<double[]> iWeights = parser.getWeights();
         ArrayList<String> iNames = parser.getStrForWeights();
         allIWeights.add(iWeights);
@@ -198,9 +198,11 @@ public class IKASLRun {
 
                 @Override
                 public int compare(LNode o1, LNode o2) {
-                    if (o1.getHitValue() >= o2.getHitValue()) {
+                    if (o1.getHitValue() > o2.getHitValue()) {
                         return -1;
-                    } else {
+                    } else if(o1.getHitValue() == o2.getHitValue()){
+                        return 0;
+                    }else {
                         return 1;
                     }
                 }
@@ -210,7 +212,7 @@ public class IKASLRun {
                 LNode n = nodes.get(i);
                 String fullNodeID = eMap.getKey() + Constants.NODE_TOKENIZER + Utils.generateIndexString(n.getX(), n.getY());
 
-                //if the current node hit value is not atleaset half of hit threshold -> ignore the node
+           r     //if the current node hit value is not atleaset half of hit threshold -> ignore the node
                 if(n.getHitValue()<hitThresh/2){
                     continue;
                 }

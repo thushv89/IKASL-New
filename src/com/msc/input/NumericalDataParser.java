@@ -22,6 +22,10 @@ public class NumericalDataParser extends InputParser{
     
     private TaskListener tListener;
     
+    public NumericalDataParser(TaskListener tListener){
+        this.tListener = tListener;
+    }
+    
     public void parseInput(String fileName){
 
 		String tokenizer= Constants.INPUT_TOKENIZER;
