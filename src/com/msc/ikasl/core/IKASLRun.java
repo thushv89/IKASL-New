@@ -78,8 +78,10 @@ public class IKASLRun {
 
     public void runSingleStep() {
 
-        parser.parseInput(dir + File.separator + "input" + (currLC+1) + ".csv");
+        parser.parseInput(dir + File.separator + "input" + (currLC+1) + ".txt");
         ArrayList<double[]> iWeights = parser.getWeights();
+        iWeights = parser.normalizeWithBounds(iWeights,AlgoParameters.MIN_BOUNDS,AlgoParameters.MAX_BOUNDS);
+        
         ArrayList<String> iNames = parser.getStrForWeights();
         allIWeights.add(iWeights);
         allINames.add(iNames);
@@ -212,7 +214,7 @@ public class IKASLRun {
                 LNode n = nodes.get(i);
                 String fullNodeID = eMap.getKey() + Constants.NODE_TOKENIZER + Utils.generateIndexString(n.getX(), n.getY());
 
-           r     //if the current node hit value is not atleaset half of hit threshold -> ignore the node
+                //if the current node hit value is not atleaset half of hit threshold -> ignore the node
                 if(n.getHitValue()<hitThresh/2){
                     continue;
                 }
@@ -261,6 +263,11 @@ public class IKASLRun {
     public int getCurrLC(){
         return currLC;
     }
+    
+    public ArrayList<GenLayer> getAllGenLayers(){
+        return allGLayers;
+    }
+    
     class ValueComparator implements Comparator<String> {
 
         Map<String, Double> base;

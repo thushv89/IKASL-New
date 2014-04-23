@@ -8,8 +8,11 @@ import com.msc.enums.GenType;
 import com.msc.ikasl.core.IKASLRun;
 import com.msc.listeners.TaskListener;
 import com.msc.utils.AlgoParameters;
+import com.msc.utils.Constants;
+import com.sun.corba.se.impl.orbutil.closure.Constant;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -62,7 +65,13 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
         jScrollPane1 = new javax.swing.JScrollPane();
         logTxt = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
         clrBtn = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        minBoundTxt = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        maxBoundTxt = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("IKASL v2");
@@ -85,7 +94,7 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
                 .addComponent(inputDirTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(8, 8, 8)
                 .addComponent(browseBtn)
-                .addGap(0, 12, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -236,15 +245,27 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Visualization and Save Options"));
 
+        jButton1.setText("Node Informatio Utility");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 394, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 86, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jButton1)
+                .addGap(0, 63, Short.MAX_VALUE))
         );
 
         clrBtn.setText("Clear");
@@ -254,31 +275,73 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
             }
         });
 
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Normalization"));
+
+        minBoundTxt.setText("-100,-100,-100,-100,-100,-100,-100,-100,-100");
+
+        jLabel8.setText("Min");
+
+        jLabel9.setText("Max");
+
+        maxBoundTxt.setText("100,100,100,100,100,100,1000,100,100");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(minBoundTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(maxBoundTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(minBoundTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(maxBoundTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addGap(0, 15, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(statusLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(statusLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(runOneBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(runAllBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clrBtn)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(runOneBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(runAllBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(clrBtn)))
                         .addGap(4, 4, 4)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 418, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -293,7 +356,9 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(runAllBtn)
                             .addComponent(runOneBtn)
@@ -339,6 +404,13 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
         logTxt.setText("");
     }//GEN-LAST:event_clrBtnActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        NodeInfoUtility niu = new NodeInfoUtility();
+        niu.setData(iRun);
+        niu.setVisible(true);
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     private void readAndSetAlgoParameters(){
         AlgoParameters.SPREAD_FACTOR = Double.parseDouble(sfTxt.getText());
         AlgoParameters.START_LEARNING_RATE = Double.parseDouble(lrTxt.getText());
@@ -353,6 +425,21 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
         }else if(aggCombo.getSelectedIndex()==1){
             AlgoParameters.gType = GenType.FUZZY;
         }
+        
+        
+        String[] minStr = minBoundTxt.getText().split(Constants.INPUT_TOKENIZER);
+        double[] min = new double[minStr.length];
+        
+        String[] maxStr = maxBoundTxt.getText().split(Constants.INPUT_TOKENIZER);
+        double[] max = new double[maxStr.length];
+        
+        for(int i=0;i<minStr.length;i++){
+            min[i]=Double.parseDouble(minStr[i]);
+            max[i]=Double.parseDouble(maxStr[i]);
+        }
+        
+        AlgoParameters.MIN_BOUNDS = min;
+        AlgoParameters.MAX_BOUNDS = max;
     }
     /**
      * @param args the command line arguments
@@ -402,6 +489,7 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
     private javax.swing.JTextField htTxt;
     private javax.swing.JTextField inputDirTxt;
     private javax.swing.JTextField iterTxt;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -409,15 +497,20 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField lcTxt;
     private javax.swing.JTextArea logTxt;
     private javax.swing.JTextField lrTxt;
+    private javax.swing.JTextField maxBoundTxt;
+    private javax.swing.JTextField minBoundTxt;
     private javax.swing.JTextField nrTxt;
     private javax.swing.JButton runAllBtn;
     private javax.swing.JButton runOneBtn;
@@ -433,5 +526,10 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
     @Override
     public void updateStatus(String msg) {
         statusLbl.setText(msg);
+    }
+
+    @Override
+    public void outputMsgBox(String msg) {
+        JOptionPane.showMessageDialog(null, msg);
     }
 }

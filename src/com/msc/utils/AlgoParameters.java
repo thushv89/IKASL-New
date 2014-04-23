@@ -16,6 +16,16 @@ public class AlgoParameters {
     public static GenType gType;
     public static int HIT_THRESHOLD;
 
+    private static double MERGE_THRESHOLD;
+    
+    public static double[] MIN_BOUNDS;
+    public static double[] MAX_BOUNDS;
+    
+    public static double getMergeThreshold(){
+        MERGE_THRESHOLD = Math.sqrt(0.1*DIMENSIONS);
+        return MERGE_THRESHOLD;
+    }
+    
     public static double getGT() {
         GT = -DIMENSIONS * DIMENSIONS * Math.log(SPREAD_FACTOR);
         return GT;

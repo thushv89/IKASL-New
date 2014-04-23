@@ -12,4 +12,5 @@ public interface TaskListener {
     
     public void logMessage(String msg);
     public void updateStatus(String msg);
+    public void outputMsgBox(String msg);
 }
