@@ -7,10 +7,16 @@ package com.msc.ui;
 import com.msc.enums.GenType;
 import com.msc.ikasl.core.IKASLRun;
 import com.msc.listeners.TaskListener;
+import com.msc.objects.GNode;
+import com.msc.objects.GenLayer;
 import com.msc.utils.AlgoParameters;
 import com.msc.utils.Constants;
+import com.msc.utils.FileWriter;
 import com.sun.corba.se.impl.orbutil.closure.Constant;
 import java.io.File;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -66,6 +72,7 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
         logTxt = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        saveWeightsBtn = new javax.swing.JButton();
         clrBtn = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         minBoundTxt = new javax.swing.JTextField();
@@ -252,20 +259,31 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
             }
         });
 
+        saveWeightsBtn.setText("Save Node Weights");
+        saveWeightsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveWeightsBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(saveWeightsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jButton1)
-                .addGap(0, 63, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(saveWeightsBtn)
+                .addGap(0, 35, Short.MAX_VALUE))
         );
 
         clrBtn.setText("Clear");
@@ -411,6 +429,28 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void saveWeightsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveWeightsBtnActionPerformed
+        ArrayList<GenLayer> allGlayers = iRun.getAllGenLayers();
+        
+        FileWriter fw = new FileWriter();
+        fw.initialize("Node Weights.txt");
+        DecimalFormat df = new DecimalFormat("#.000");
+            
+        for(GenLayer gL : allGlayers){
+            fw.writeData("Learn Cycle =======================\n");
+            for(Map.Entry<String,GNode> e : gL.getMap().entrySet()){
+                String str = e.getKey()+"\t";
+                for(double d : e.getValue().getWeights()){
+                    str += df.format(d) + "\t";
+                }
+                fw.writeData(str);
+            }
+            fw.writeData("=====================================\n");
+        }
+        
+        fw.close();
+    }//GEN-LAST:event_saveWeightsBtnActionPerformed
+
     private void readAndSetAlgoParameters(){
         AlgoParameters.SPREAD_FACTOR = Double.parseDouble(sfTxt.getText());
         AlgoParameters.START_LEARNING_RATE = Double.parseDouble(lrTxt.getText());
@@ -514,6 +554,7 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
     private javax.swing.JTextField nrTxt;
     private javax.swing.JButton runAllBtn;
     private javax.swing.JButton runOneBtn;
+    private javax.swing.JButton saveWeightsBtn;
     private javax.swing.JTextField sfTxt;
     private javax.swing.JLabel statusLbl;
     // End of variables declaration//GEN-END:variables

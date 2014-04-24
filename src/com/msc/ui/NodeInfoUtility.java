@@ -13,6 +13,9 @@ import com.msc.utils.Utils;
 import com.sun.corba.se.impl.orbutil.closure.Constant;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Currency;
+import java.util.List;
 
 /**
  *
@@ -156,6 +159,11 @@ public class NodeInfoUtility extends javax.swing.JFrame {
         jScrollPane1.setViewportView(commonResultTxt);
 
         commonBtn.setText("Display Common");
+        commonBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                commonBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -218,7 +226,16 @@ public class NodeInfoUtility extends javax.swing.JFrame {
         int lc = Integer.parseInt(nodeStr[0]);
         int id = Integer.parseInt(nodeStr[1]);
 
-        GenLayer reqLayer = iRun.getAllGenLayers().get(lc);
+        GenLayer reqLayer = null;
+        //The node essentially does not need to be in the GLayer with index lc,
+        //It can be in any layer above lc as it can propagate to other layers as a non-hit node
+        for(int i=iRun.getCurrLC()-1;i>=lc;i--){
+            if(iRun.getAllGenLayers().get(i).getMap().containsKey(nodeWeightInTxt.getText())){
+                reqLayer = iRun.getAllGenLayers().get(i);
+                break;
+            }
+        }
+
         double[] reqWeight = reqLayer.getMap().get(Utils.generateIndexString(lc, id)).getWeights();
 
         for (int i = 0; i < reqWeight.length; i++) {
@@ -252,6 +269,43 @@ public class NodeInfoUtility extends javax.swing.JFrame {
 
         ancestorResultLbl.setText(result);
     }//GEN-LAST:event_ancestorsBtnActionPerformed
+
+    private void commonBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commonBtnActionPerformed
+        String result = "";
+        String[] in1Str = commonIn1Txt.getText().split(Constants.I_J_TOKENIZER);
+        int lc1 = Integer.parseInt(in1Str[0]);
+        int id1 = Integer.parseInt(in1Str[1]);
+        String[] in2Str = commonIn2Txt.getText().split(Constants.I_J_TOKENIZER);
+        int lc2 = Integer.parseInt(in2Str[0]);
+        int id2 = Integer.parseInt(in2Str[1]);
+        
+        String inputs1 = "";
+        String inputs2 = "";
+        
+        for(int i=iRun.getCurrLC()-1;i>=Math.min(lc1, lc2);i--){
+            if(iRun.getAllGenLayerInputs().get(i).containsKey(commonIn1Txt.getText())){
+                inputs1 = iRun.getAllGenLayerInputs().get(i).get(commonIn1Txt.getText());
+            }
+            if(iRun.getAllGenLayerInputs().get(i).containsKey(commonIn2Txt.getText())){
+                inputs2 = iRun.getAllGenLayerInputs().get(i).get(commonIn2Txt.getText());
+            }
+        }
+        
+        String[] input1Tokens = inputs1.split(Constants.I_J_TOKENIZER);
+        String[] input2Tokens = inputs2.split(Constants.I_J_TOKENIZER);
+        
+        List<String> in1List = Arrays.asList(input1Tokens);
+        List<String> in2List = Arrays.asList(input2Tokens);
+        
+        in1List.retainAll(in2List);
+        
+        
+        for(String s : in1List){
+            result += s+", ";
+        }
+        
+        commonResultTxt.setText(result);
+    }//GEN-LAST:event_commonBtnActionPerformed
 
     /**
      * @param args the command line arguments

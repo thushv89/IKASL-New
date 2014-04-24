@@ -268,6 +268,10 @@ public class IKASLRun {
         return allGLayers;
     }
     
+    public ArrayList<Map<String,String>> getAllGenLayerInputs(){
+        return allGNodeInputs;
+    }
+    
     class ValueComparator implements Comparator<String> {
 
         Map<String, Double> base;

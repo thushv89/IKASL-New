@@ -22,7 +22,7 @@ public class AlgoParameters {
     public static double[] MAX_BOUNDS;
     
     public static double getMergeThreshold(){
-        MERGE_THRESHOLD = Math.sqrt(0.1*DIMENSIONS);
+        MERGE_THRESHOLD = Math.sqrt(0.05*DIMENSIONS);
         return MERGE_THRESHOLD;
     }
     
