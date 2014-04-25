@@ -26,7 +26,12 @@ public class NumericalDataParser extends InputParser {
     }
 
     public void parseInput(String fileName) {
-
+        
+        //clear the weights and strForWeights arraylists.
+        //Otherwise data from previous learn cycle are present when getting data for current learn cycle
+        this.weights.clear();
+        this.strForWeights.clear();
+        
         String tokenizer = Constants.INPUT_TOKENIZER;
         int tempDim = 0;
         boolean dimensionMismatch = false;

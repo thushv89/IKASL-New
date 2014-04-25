@@ -15,4 +15,5 @@ public class Constants {
     public static String I_J_TOKENIZER = ",";
     public static final String INIT_PARENT = "-1,-1";
     public static final String PARENT_TOKENIZER = "_";
+    public static final String BOUNDS_FILE = "bounds.txt";
 }

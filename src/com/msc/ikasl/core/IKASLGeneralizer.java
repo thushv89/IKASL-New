@@ -78,7 +78,9 @@ public class IKASLGeneralizer {
 
                     //Check for potential mergeable nodes
                     for (Map.Entry<String, GNode> e1 : gLayer.getMap().entrySet()) {
-                        if (Utils.calcEucDist(gWeight, e1.getValue().getWeights(), AlgoParameters.DIMENSIONS) < AlgoParameters.getMergeThreshold()) {
+                        
+                        if (!parentID.equals(e1.getValue().getParentID()) &&
+                                Utils.calcEucDist(gWeight, e1.getValue().getWeights(), AlgoParameters.DIMENSIONS) < AlgoParameters.getMergeThreshold()) {
                             
                             //Find whether any of the dimension difference between gweight and current GNode in map
                             //is greater than some threshold
@@ -108,13 +110,10 @@ public class IKASLGeneralizer {
                         GNode node = null;
                         double[] newWeight = mergeWeights(gWeight, mergeNode.getWeights(), new double[]{0.5, 0.5});
 
-                        //If parent is equal for both nodes, no need of alternating the parent ID
-                        if (parentID.equals(mergeNode.getParentID())) {
-                            node = new GNode(mergeNode.getLc(), mergeNode.getId(), newWeight, parentID);
-                        } else {
-                            String newParentID = parentID + Constants.PARENT_TOKENIZER + mergeNode.getParentID();
-                            node = new GNode(mergeNode.getLc(), mergeNode.getId(), newWeight, newParentID);
-                        }
+                        //If parent is equal for both nodes, DO NOT MERGE
+                        String newParentID = parentID + Constants.PARENT_TOKENIZER + mergeNode.getParentID();
+                        node = new GNode(mergeNode.getLc(), mergeNode.getId(), newWeight, newParentID);
+                        
                         gLayer.addNode(node);
 
                         tListener.logMessage("Current Best Hit Node (" + loc + ") Merged with " + Utils.generateIndexString(mergeNode.getLc(), mergeNode.getId())
