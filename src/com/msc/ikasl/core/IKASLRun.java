@@ -80,7 +80,9 @@ public class IKASLRun {
 
         parser.parseInput(dir + File.separator + "input" + (currLC+1) + ".txt");
         ArrayList<double[]> iWeights = parser.getWeights();
+        
         iWeights = parser.normalizeWithBounds(iWeights,AlgoParameters.MIN_BOUNDS,AlgoParameters.MAX_BOUNDS);
+        tListener.logMessage(LogMessages.INPUTS_NORMALIZED);
         
         ArrayList<String> iNames = parser.getStrForWeights();
         allIWeights.add(iWeights);
@@ -113,18 +115,19 @@ public class IKASLRun {
             //call IKASLAggregator.aggregate(learnLayer) and output Genlayer(currLC)
             ArrayList<String> bestHits = getHitNodeIDs(currLLayer, AlgoParameters.HIT_THRESHOLD, AlgoParameters.MAX_NEIGHBORHOOD_RADIUS);
             GenLayer currGLayer = generalizer.generalize(currLC, currLLayer, bestHits, AlgoParameters.gType);
-            currGLayer.addNodes(learner.getNonHitNodes(currLC));
             
-            String msg = "Non-Hit Nodes (LC="+(currLC-1)+"): ";
-            for(GNode n : learner.getNonHitNodes(currLC)){
-                msg += n.getParentID()+Constants.NODE_TOKENIZER+Utils.generateIndexString(n.getLc(), n.getId())+" ";
-            }
-            tListener.logMessage(msg);
+            //We call mapping inputs to GNodes before adding non-hit nodes from prev GLayer to new layer
+            //because otherwise it is possible to non-hit node to have inputs assigned
+            //Intuitively it should not happen, because it appeared as a non-hit node at the first place, 
+            //because there were no inputs similar to that.
+            mapInputsToGNodes(currGLayer, allIWeights.get(currLC), allINames.get(currLC));
+            
+            currGLayer.addNodes(learner.getNonHitNodes(currLC));                        
             
             //add Genlayer(currLC) to allGLayers
             allGLayers.add(currGLayer);
             
-            mapInputsToGNodes(currGLayer, allIWeights.get(currLC), allINames.get(currLC));
+            
         }
         currLC++;
     }

@@ -91,6 +91,19 @@ public class IKASLLearner {
             }
             
             
+            tListener.logMessage("Learning Phase Completed. "+lLayer.getMap().size()+" Maps created.");
+            String mapResults = "Number of nodes in Maps: ";
+            for(Map<String,LNode> e : lLayer.getMap().values()){
+                mapResults += e.size()+" ";
+            }
+            tListener.logMessage(mapResults);
+            tListener.logMessage("Non-Hit Node Count: "+nonHitNodes.size());
+            String nonHitMsg = "Non-Hit Nodes: ";
+            for(GNode n : nonHitNodes){
+                nonHitMsg += n.getParentID()+Constants.NODE_TOKENIZER+Utils.generateIndexString(n.getLc(), n.getId())+" ";
+            }
+            tListener.logMessage(nonHitMsg);
+            tListener.logMessage("\n");
             
             return lLayer;
 

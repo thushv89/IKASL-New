@@ -77,13 +77,11 @@ public class NumericalDataParser extends InputParser {
             input.close();
             
             if (dimensionMismatch) {
-                tListener.updateStatus(LogMessages.DIM_MISMATCH);
-                tListener.outputMsgBox(LogMessages.DIM_MISMATCH);
+                tListener.logMessage(LogMessages.DIM_MISMATCH);
             }
 
             if (notNormalized) {
-                tListener.updateStatus(LogMessages.NOT_NORMALIZED);
-                tListener.outputMsgBox(LogMessages.NOT_NORMALIZED);
+                tListener.logMessage(LogMessages.NOT_NORMALIZED);
             }
 
             AlgoParameters.DIMENSIONS = weights.get(0).length;

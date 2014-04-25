@@ -21,6 +21,8 @@ public class AlgoParameters {
     public static double[] MIN_BOUNDS;
     public static double[] MAX_BOUNDS;
     
+    public static double MERGE_ONE_DIM_THRESHOLD=0.1;
+    
     public static double getMergeThreshold(){
         MERGE_THRESHOLD = Math.sqrt(0.05*DIMENSIONS);
         return MERGE_THRESHOLD;

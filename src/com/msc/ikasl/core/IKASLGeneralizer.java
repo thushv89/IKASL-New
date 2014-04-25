@@ -85,7 +85,7 @@ public class IKASLGeneralizer {
                             //Find whether any of the dimension difference between gweight and current GNode in map
                             //is greater than some threshold
                             for (int i = 0; i < AlgoParameters.DIMENSIONS; i++) {
-                                if (Math.abs(gWeight[i] - e1.getValue().getWeights()[i]) > 0.1) {
+                                if (Math.abs(gWeight[i] - e1.getValue().getWeights()[i]) > AlgoParameters.MERGE_ONE_DIM_THRESHOLD) {
                                     haveLargeDim = true;
                                     break;
                                 }
@@ -126,6 +126,7 @@ public class IKASLGeneralizer {
             }
         }
 
+        tListener.logMessage("Generalization Phase Completed." + gLayer.getMap().size()+ " Nodes Created.");
         return gLayer;
     }
 
