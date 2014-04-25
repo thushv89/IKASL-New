@@ -180,7 +180,7 @@ public class IKASLRun {
         
         ArrayList<String> selectedNodeIDs = new ArrayList<String>();
 
-        double threshold = hitThresh * neighRad;
+        double threshold = hitThresh * Math.sqrt(neighRad) * Math.sqrt(AlgoParameters.MERGE_ONE_DIM_THRESHOLD*AlgoParameters.DIMENSIONS);
 
         for (Entry<String, Map<String, LNode>> eMap : lMap.entrySet()) {
             Map<String, Double> mapHitVals = new HashMap<String, Double>();
@@ -225,21 +225,29 @@ public class IKASLRun {
                 if (i == 0) {
                     mapHitVals.put(fullNodeID, Double.MAX_VALUE);
                 } else {
-                    double minDist = Double.MAX_VALUE;
+                    double minPDist = Double.MAX_VALUE;
+                    double minEDist = Double.MAX_VALUE;
+                    
                     for (int j = 0; j < i; j++) {
-                        double distance = (nodes.get(i).getX() - nodes.get(j).getX()) * (nodes.get(i).getX() - nodes.get(j).getX())
+                        double pDistance = (nodes.get(i).getX() - nodes.get(j).getX()) * (nodes.get(i).getX() - nodes.get(j).getX())
                                 + (nodes.get(i).getY() - nodes.get(j).getY()) * (nodes.get(i).getY() - nodes.get(j).getY());
-                        distance = Math.sqrt(distance);
-                        if (distance < minDist) {
-                            minDist = distance;
+                        pDistance = Math.sqrt(pDistance);
+                        
+                        double eDistance = Utils.calcEucDist(nodes.get(i).getWeights(), nodes.get(j).getWeights(), AlgoParameters.DIMENSIONS);
+                        
+                        if (pDistance < minPDist) {
+                            minPDist = pDistance;
+                        }
+                        if (pDistance < minEDist){
+                            minEDist = eDistance;
                         }
                     }
 
-                    if(minDist < neighRad/2 ){
+                    if(minPDist < neighRad/2 ){
                         continue;
                     }
                     
-                    double hitValue = nodes.get(i).getHitValue() * minDist;
+                    double hitValue = nodes.get(i).getHitValue() * Math.sqrt(minPDist) * minEDist;
                     mapHitVals.put(fullNodeID, hitValue);
                 }
 
