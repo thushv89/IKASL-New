@@ -4,6 +4,7 @@
  */
 package com.msc.objects;
 
+import com.msc.enums.Behavior;
 import java.io.Serializable;
 import org.omg.CORBA.TRANSIENT;
 
@@ -18,6 +19,8 @@ public class GNode extends Node{
     
     private String parentID;
     
+    private Behavior behavior;
+    
     public GNode(){        
     }
        
@@ -28,6 +31,10 @@ public class GNode extends Node{
         this.parentID = parentID;
     }
 
+    public Behavior getBehaviorType(double[] weights){
+        return null;
+    }
+    
     /**
      * @return the lc
      */
