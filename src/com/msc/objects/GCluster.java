@@ -33,7 +33,7 @@ public class GCluster {
     public double getSI() {
         double SI2 = 0;
         for (LNode node : cNodes) {
-            SI2 += Math.pow(Utils.calcEucDist(node.getWeights(), centroidWeights, AlgoParameters.DIMENSIONS), 2);
+            SI2 += Math.pow(Utils.calcEucDist(node.getWeights(), centroidWeights, AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS), 2);
         }
 
         return Math.sqrt(SI2 / cNodes.size());

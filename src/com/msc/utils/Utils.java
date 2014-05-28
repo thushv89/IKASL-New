@@ -50,7 +50,7 @@ public class Utils {
         double currDist = Double.MAX_VALUE;
         double minDist = Double.MAX_VALUE;
         for (Map.Entry<String, LNode> entry : nodeMap.entrySet()) {
-            currDist = Utils.calcEucDist(input, entry.getValue().getWeights(), AlgoParameters.DIMENSIONS);
+            currDist = Utils.calcEucDist(input, entry.getValue().getWeights(), AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
             if (currDist < minDist) {
                 winner = entry.getValue();
                 minDist = currDist;
@@ -60,12 +60,36 @@ public class Utils {
         return winner;
     }
     
+    public static double[] getUnitVector(int dimensions){
+        double[] unitVec = new double[dimensions];
+        for(int i=0;i<dimensions;i++){
+            unitVec[i]=1;
+        }
+        return unitVec;
+    }
+    
+    public static double[] getZeroVector(int dimensions){
+        double[] zeroVec = new double[dimensions];
+        for(int i=0;i<dimensions;i++){
+            zeroVec[i]=0;
+        }
+        return zeroVec;
+    }
+    
+    public static double[] getUniformVector(double value, int dimensions){
+        double[] unifVec = new double[dimensions];
+        for(int i=0;i<dimensions;i++){
+            unifVec[i]=value;
+        }
+        return unifVec;
+    }
+    
     public static GNode selectGWinner(Map<String, GNode> nodeMap, double[] input) {
         GNode winner = null;
         double currDist = Double.MAX_VALUE;
         double minDist = Double.MAX_VALUE;
         for (Map.Entry<String, GNode> entry : nodeMap.entrySet()) {
-            currDist = Utils.calcEucDist(input, entry.getValue().getWeights(), AlgoParameters.DIMENSIONS);
+            currDist = Utils.calcEucDist(input, entry.getValue().getWeights(), AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
             if (currDist < minDist) {
                 winner = entry.getValue();
                 minDist = currDist;
@@ -91,10 +115,10 @@ public class Utils {
         return AlgoParameters.DIMENSIONS * Math.exp(-(double) iter / timeConst);
     }
 
-    public static double calcEucDist(double[] in1, double[] in2, int dimensions) {
+    public static double calcEucDist(double[] in1, double[] in2, int dimensions, double[] weights) {
         double dist = 0.0;
         for (int i = 0; i < dimensions; i++) {
-            dist += Math.pow(in1[i] - in2[i], 2);
+            dist += Math.pow(in1[i] - in2[i], 2)*weights[i];
         }
 
         return Math.sqrt(dist);

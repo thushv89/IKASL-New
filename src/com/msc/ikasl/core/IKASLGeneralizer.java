@@ -80,12 +80,13 @@ public class IKASLGeneralizer {
                     for (Map.Entry<String, GNode> e1 : gLayer.getMap().entrySet()) {
                         
                         if (!parentID.equals(e1.getValue().getParentID()) &&
-                                Utils.calcEucDist(gWeight, e1.getValue().getWeights(), AlgoParameters.DIMENSIONS) < AlgoParameters.getMergeThreshold()) {
+                                Utils.calcEucDist(gWeight, e1.getValue().getWeights(), AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS) < AlgoParameters.getMergeThreshold()) {
                             
                             //Find whether any of the dimension difference between gweight and current GNode in map
                             //is greater than some threshold
+                            //REMEMBER: Multiply one_dim_threshold by corresponding attribute weight
                             for (int i = 0; i < AlgoParameters.DIMENSIONS; i++) {
-                                if (Math.abs(gWeight[i] - e1.getValue().getWeights()[i]) > AlgoParameters.MERGE_ONE_DIM_THRESHOLD) {
+                                if (Math.abs(gWeight[i] - e1.getValue().getWeights()[i]) > AlgoParameters.MERGE_ONE_DIM_THRESHOLD*AlgoParameters.ATTR_WEIGHTS[i]) {
                                     haveLargeDim = true;
                                     break;
                                 }

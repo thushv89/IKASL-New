@@ -131,7 +131,7 @@ public class KMeanClusterer2 {
             double proxdistance;
             //if (entry.getValue().getHitValue() > 0) {
                 for (int i = 0; i < clusters.size(); i++) {
-                    distance = Utils.calcEucDist(entry.getValue().getWeights(), clusters.get(i).getCentroidWeights(), AlgoParameters.DIMENSIONS);
+                    distance = Utils.calcEucDist(entry.getValue().getWeights(), clusters.get(i).getCentroidWeights(), AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
                     proxdistance = (double)((entry.getValue().getX() - clusters.get(i).getX())*(entry.getValue().getX() - clusters.get(i).getX()))/(minMax[2]*minMax[2]) + 
                             (double)((entry.getValue().getY() - clusters.get(i).getY())*(entry.getValue().getY() - clusters.get(i).getY()))/(minMax[3]*minMax[3]);
                     proxdistance = Math.sqrt(proxdistance);

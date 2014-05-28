@@ -21,12 +21,14 @@ public class AlgoParameters {
     public static double[] MIN_BOUNDS;
     public static double[] MAX_BOUNDS;
     
+    public static double[] ATTR_WEIGHTS;
+    
     public static double[] ANOMALY_THRESHOLDS;
     
     public static double MERGE_ONE_DIM_THRESHOLD=0.1;
     
     public static double getMergeThreshold(){
-        MERGE_THRESHOLD = Math.sqrt(0.05*DIMENSIONS);
+        MERGE_THRESHOLD = Utils.calcEucDist(Utils.getUniformVector(0.05, DIMENSIONS), Utils.getZeroVector(DIMENSIONS), DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
         return MERGE_THRESHOLD;
     }
     

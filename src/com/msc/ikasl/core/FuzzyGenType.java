@@ -22,6 +22,7 @@ public class FuzzyGenType implements IKASLGenType {
     public double[] generalize(Node hit, List<Node> neigh1, List<Node> neigh2) {
 
         int dimensions = AlgoParameters.DIMENSIONS;
+        double[] attrWeights = AlgoParameters.ATTR_WEIGHTS;
         
         ArrayList<Node> allNodes = new ArrayList<Node>();
         ArrayList<Double> allNodesDistances = new ArrayList<Double>();
@@ -34,7 +35,7 @@ public class FuzzyGenType implements IKASLGenType {
         //calculate euclidean distances for all the nodes with respect to winning node.
         //(1-distance) to get the fuzzy g(X) value
         for (int i = 0; i < allNodes.size(); i++) {
-            allNodesDistances.add(1 - (Utils.calcEucDist(allNodes.get(0).getWeights(), allNodes.get(i).getWeights(), dimensions)) / 2 * Math.sqrt(2));
+            allNodesDistances.add(1 - (Utils.calcEucDist(allNodes.get(0).getWeights(), allNodes.get(i).getWeights(), dimensions, attrWeights)) / 2 * Math.sqrt(2));
         }
 
         ArrayList<Double> tempWeights = new ArrayList<Double>();

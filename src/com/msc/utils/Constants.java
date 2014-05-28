@@ -16,4 +16,5 @@ public class Constants {
     public static final String INIT_PARENT = "-1,-1";
     public static final String PARENT_TOKENIZER = "_";
     public static final String BOUNDS_FILE = "bounds.txt";
+    public static final String WEIGHT_FILE = "weights.txt";
 }

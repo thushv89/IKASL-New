@@ -464,6 +464,16 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
         
         AlgoParameters.MIN_BOUNDS = min;
         AlgoParameters.MAX_BOUNDS = max;
+        
+        String weightsStr = fr.readLines(inputDir+"\\"+Constants.WEIGHT_FILE).get(0);
+        String[] weightTokens = weightsStr.split(Constants.INPUT_TOKENIZER);
+        double[] weights = new double[weightTokens.length];
+        
+        for(int i=0;i<weightTokens.length;i++){
+            weights[i]=Double.parseDouble(weightTokens[i]);
+        }
+        
+        AlgoParameters.ATTR_WEIGHTS = weights;
     }
     /**
      * @param args the command line arguments

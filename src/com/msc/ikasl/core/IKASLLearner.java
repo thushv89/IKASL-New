@@ -131,7 +131,7 @@ public class IKASLLearner {
             double minDist = Double.MAX_VALUE;
             String gID = "";
             for (Map.Entry<String, GNode> n : prevGNodes.entrySet()) {
-                double distance = Utils.calcEucDist(iWeights.get(i), n.getValue().getWeights(), AlgoParameters.DIMENSIONS);
+                double distance = Utils.calcEucDist(iWeights.get(i), n.getValue().getWeights(), AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
                 if (distance < minDist) {
                     minDist = distance;
                     gID = n.getKey();

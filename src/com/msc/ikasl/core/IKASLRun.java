@@ -180,8 +180,10 @@ public class IKASLRun {
         
         ArrayList<String> selectedNodeIDs = new ArrayList<String>();
 
-        double threshold = hitThresh * Math.sqrt(neighRad) * Math.sqrt(AlgoParameters.MERGE_ONE_DIM_THRESHOLD*AlgoParameters.DIMENSIONS);
-
+        //double threshold = hitThresh * Math.sqrt(neighRad) * Math.sqrt(AlgoParameters.MERGE_ONE_DIM_THRESHOLD*AlgoParameters.DIMENSIONS);
+        double threshold = hitThresh * Math.sqrt(neighRad) * Utils.calcEucDist(Utils.getUniformVector(AlgoParameters.MERGE_ONE_DIM_THRESHOLD, AlgoParameters.DIMENSIONS), 
+                Utils.getZeroVector(AlgoParameters.DIMENSIONS), AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
+        
         for (Entry<String, Map<String, LNode>> eMap : lMap.entrySet()) {
             Map<String, Double> mapHitVals = new HashMap<String, Double>();
             //Check whether atleast one node exceed hit Threshold 
@@ -233,7 +235,7 @@ public class IKASLRun {
                                 + (nodes.get(i).getY() - nodes.get(j).getY()) * (nodes.get(i).getY() - nodes.get(j).getY());
                         pDistance = Math.sqrt(pDistance);
                         
-                        double eDistance = Utils.calcEucDist(nodes.get(i).getWeights(), nodes.get(j).getWeights(), AlgoParameters.DIMENSIONS);
+                        double eDistance = Utils.calcEucDist(nodes.get(i).getWeights(), nodes.get(j).getWeights(), AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
                         
                         if (pDistance < minPDist) {
                             minPDist = pDistance;
