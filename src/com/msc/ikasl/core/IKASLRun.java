@@ -16,6 +16,7 @@ import com.msc.utils.Constants;
 import com.msc.utils.LogMessages;
 import com.msc.utils.Utils;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -196,8 +197,9 @@ public class IKASLRun {
                 purityMap.put(key, value);
                 
                 double weight = getIntersectionWeight(currNodeInputs.split(Constants.INPUT_TOKENIZER).length, totalInputs);
-
-                tListener.logMessage(key + ": " + value + "%" + " ("+weight+")");
+                
+                DecimalFormat df = new DecimalFormat("#.###");
+                tListener.logMessage(key + ": " + df.format(value) + "%" + " ("+df.format(weight)+")");
             }
         }
         tListener.logMessage(LogMessages.SEPARATOR);
@@ -240,7 +242,10 @@ public class IKASLRun {
         }
 
         extraInCurr = curr.length - downcount;
+        
+        //downPercent can go negative if the curr node has no intersection with it's parent
         double downPercent = ((downcount*1.0/prev.length)-(extraInCurr*1.0/Math.max(curr.length,prev.length))) * 100.0;
+        
         return downPercent;
     }
     
@@ -288,8 +293,9 @@ public class IKASLRun {
         ArrayList<String> selectedNodeIDs = new ArrayList<String>();
 
         //double threshold = hitThresh * Math.sqrt(neighRad) * Math.sqrt(AlgoParameters.MERGE_ONE_DIM_THRESHOLD*AlgoParameters.DIMENSIONS);
-        double threshold = hitThresh * Math.sqrt(neighRad) * Utils.calcEucDist(Utils.getUniformVector(AlgoParameters.MERGE_ONE_DIM_THRESHOLD, AlgoParameters.DIMENSIONS),
+        double distThreshold = Utils.calcEucDist(Utils.getUniformVector(AlgoParameters.MERGE_ONE_DIM_THRESHOLD, AlgoParameters.DIMENSIONS),
                 Utils.getZeroVector(AlgoParameters.DIMENSIONS), AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
+        double threshold = hitThresh * Math.sqrt(neighRad) * Math.pow(distThreshold, 2);
 
         for (Entry<String, Map<String, LNode>> eMap : lMap.entrySet()) {
             Map<String, Double> mapHitVals = new HashMap<String, Double>();
@@ -356,7 +362,7 @@ public class IKASLRun {
                         continue;
                     }
 
-                    double hitValue = nodes.get(i).getHitValue() * Math.sqrt(minPDist) * minEDist;
+                    double hitValue = nodes.get(i).getHitValue() * Math.sqrt(minPDist) * Math.pow(minEDist, 2);
                     mapHitVals.put(fullNodeID, hitValue);
                 }
 
