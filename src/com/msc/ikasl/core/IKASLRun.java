@@ -30,12 +30,10 @@ public class IKASLRun {
     private ArrayList<Map<String, String>> allGNodeInputs;
     private ArrayList<ArrayList<double[]>> allIWeights;
     private ArrayList<ArrayList<String>> allINames;
-
     private NumericalDataParser parser;
     private IKASLLearner learner;
     private IKASLGeneralizer generalizer;
     private TaskListener tListener;
-
     private String dir;
 
     public IKASLRun(TaskListener tListener) {
@@ -143,22 +141,63 @@ public class IKASLRun {
 
     }
 
+    //WE haven't considered what happens when the parent node is not from the immediate previous layer, but from a layer below that
+    //SOLVED Above
     private HashMap<String, Double> getClusterPurityVector(GenLayer currLayer, GenLayer prevLayer, int currLC) {
         HashMap<String, Double> purityMap = new HashMap<String, Double>();
         tListener.logMessage(LogMessages.SEPARATOR);
         tListener.logMessage("Cluster Purity Information");
 
+        //find total number of inputs
+        int totalInputs = 0;
+        for (String s : allGNodeInputs.get(currLC).values()) {
+            totalInputs += s.split(Constants.INPUT_TOKENIZER).length;
+        }
+
         for (GNode n : currLayer.getMap().values()) {
             String currNodeInputs = allGNodeInputs.get(currLC).get(Utils.generateIndexString(n.getLc(), n.getId()));
-            String pNodeInputs = allGNodeInputs.get(currLC - 1).get(n.getParentID());
+            String pNodeInputs = null;
+
+            if (!n.getParentID().contains(Constants.PARENT_TOKENIZER)) {
+                for (int j = currLC - 1; j >= 0; j--) {
+                    pNodeInputs = allGNodeInputs.get(j).get(n.getParentID());
+                    if (pNodeInputs != null && !pNodeInputs.isEmpty()) {
+                        break;
+                    }
+                }
+
+            } else {
+                //logic when the node has two parents
+                String[] pIDs = n.getParentID().split(Constants.PARENT_TOKENIZER);
+                for (int j = currLC - 1; j >= 0; j--) {
+                    pNodeInputs = allGNodeInputs.get(j).get(pIDs[0]);
+                    if (pNodeInputs != null && !pNodeInputs.isEmpty()) {
+                        break;
+                    }
+                }
+
+                for (int i = 1; i < pIDs.length; i++) {
+                    for (int j = currLC - 1; j >= 0; j--) {
+
+                        if (allGNodeInputs.get(j).get(pIDs[i]) != null && !allGNodeInputs.get(j).get(pIDs[i]).isEmpty()) {
+                            pNodeInputs += "," + allGNodeInputs.get(j).get(pIDs[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+
+
 
             if (currNodeInputs != null && !currNodeInputs.isEmpty()
                     && pNodeInputs != null && !pNodeInputs.isEmpty()) {
                 String key = n.getParentID() + Constants.NODE_TOKENIZER + Utils.generateIndexString(n.getLc(), n.getId());
                 double value = getStringArrIntersectionPercent(currNodeInputs.split(Constants.INPUT_TOKENIZER), pNodeInputs.split(Constants.INPUT_TOKENIZER));
                 purityMap.put(key, value);
+                
+                double weight = getIntersectionWeight(currNodeInputs.split(Constants.INPUT_TOKENIZER).length, totalInputs);
 
-                tListener.logMessage(key + ": " + value + "%");
+                tListener.logMessage(key + ": " + value + "%" + " ("+weight+")");
             }
         }
         tListener.logMessage(LogMessages.SEPARATOR);
@@ -168,9 +207,12 @@ public class IKASLRun {
     //When finding intersection of current and previous, remember to consider situations like
     //if curr node has 10 units and prev node has 5 units, but curr node has all 5 of the prev node
     //introduce a penalty for additional units the curr node having
-    //ONE SOLUTION is we look the intersection from curr -> prev and prev -> curr then take the minimum of that
-    //reason is that it is important not to have additional devices as well as lack of devices
-    private double getStringArrIntersectionPercent(String[] curr, String[] prev) {
+    //We do not have to worry about that according to current implementation. Because if the above scenario occur,
+    //percentage will be (5/10)*100 = 50% so it's automaticall taken care of.
+    
+    //Taking the max as denominator can result in a low percentage if there's a branching from parent node to 2 current nodes
+    //because the denominator would be the parent nodes value
+    /*private double getStringArrIntersectionPercent(String[] curr, String[] prev) {
         int downcount = 0;
         for (String s1 : curr) {
             for (String s2 : prev) {
@@ -181,21 +223,29 @@ public class IKASLRun {
             }
         }
 
-        double downPercent = downcount * 100.0 / curr.length;
+        double downPercent = downcount * 100.0 / Math.max(curr.length,prev.length);
+        return downPercent;
+    }*/
 
-        int upcount = 0;
+    private double getStringArrIntersectionPercent(String[] curr, String[] prev) {
+        int downcount = 0;
+        int extraInCurr = 0;
         for (String s1 : curr) {
             for (String s2 : prev) {
                 if (s1.equals(s2)) {
-                    upcount++;
+                    downcount++;
                     break;
                 }
             }
         }
 
-        double upPercent = upcount * 100.0 / prev.length;
-
-        return Double.min(downPercent, upPercent);
+        extraInCurr = curr.length - downcount;
+        double downPercent = ((downcount*1.0/prev.length)-(extraInCurr*1.0/Math.max(curr.length,prev.length))) * 100.0;
+        return downPercent;
+    }
+    
+    private double getIntersectionWeight(int curr, int total) {
+        return curr*1.0 / total;
     }
 
     private void mapInputsToGNodes(GenLayer gLayer, ArrayList<double[]> prevIWeights, ArrayList<String> prevINames) {
@@ -206,7 +256,6 @@ public class IKASLRun {
         for (int i = 0; i < prevIWeights.size(); i++) {
 
             GNode winner = Utils.selectGWinner(nodeMap, prevIWeights.get(i));
-            //System.out.println("Winner for "+iStrings.get(i)+" is "+winner.getX()+","+winner.getY());
 
             String winnerStr = Utils.generateIndexString(winner.getLc(), winner.getId());
             String testResultKey = winnerStr;
@@ -227,7 +276,8 @@ public class IKASLRun {
 
         String results = "";
         for (Map.Entry<String, String> entry : testResultMap.entrySet()) {
-            results += entry.getKey() + ": " + entry.getValue() + "\n";
+            String parentID = gLayer.getMap().get(entry.getKey()).getParentID();
+            results += parentID + Constants.NODE_TOKENIZER + entry.getKey() + ": " + entry.getValue() + "\n";
         }
         tListener.logMessage(results);
     }

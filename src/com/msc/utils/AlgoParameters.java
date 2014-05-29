@@ -25,10 +25,10 @@ public class AlgoParameters {
     
     public static double[] ANOMALY_THRESHOLDS;
     
-    public static double MERGE_ONE_DIM_THRESHOLD=0.1;
+    public static double MERGE_ONE_DIM_THRESHOLD=0.2;
     
     public static double getMergeThreshold(){
-        MERGE_THRESHOLD = Utils.calcEucDist(Utils.getUniformVector(0.05, DIMENSIONS), Utils.getZeroVector(DIMENSIONS), DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
+        MERGE_THRESHOLD = Utils.calcEucDist(Utils.getUniformVector(0.1, DIMENSIONS), Utils.getZeroVector(DIMENSIONS), DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
         return MERGE_THRESHOLD;
     }
     
