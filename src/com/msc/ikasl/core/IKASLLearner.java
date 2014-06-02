@@ -29,13 +29,13 @@ public class IKASLLearner {
 
     private TaskListener tListener;
     private ArrayList<GNode> nonHitNodes;
-    
-    public IKASLLearner(TaskListener tListener){
+
+    public IKASLLearner(TaskListener tListener) {
         this.tListener = tListener;
     }
-    
+
     public LearnLayer trainAndGetLearnLayer(int currLC, ArrayList<double[]> iWeights, ArrayList<String> iNames, GenLayer prevGLayer) {
-        
+
         //if currLC ==0 there is no prevGLayer. So ignore that parameter
         if (currLC == 0) {
             GSOMTrainer gTrainer = new GSOMTrainer();
@@ -44,21 +44,21 @@ public class IKASLLearner {
 
             GSOMSmoothner gSmoother = new GSOMSmoothner();
             gSmoother.smoothGSOM(trainedMap, iWeights);
-            
+
             GCoordAdjuster gAdjuster = new GCoordAdjuster();
             Map<String, LNode> adjustedMap = gAdjuster.adjustMapCoords(trainedMap);
 
             GSOMTester gTester = new GSOMTester();
             gTester.testGSOM(adjustedMap, iWeights, iNames);
-            
+
             LearnLayer lLayer = new LearnLayer();
             lLayer.addMap(Constants.INIT_PARENT, adjustedMap);
             return lLayer;
         } //else, prevGLayer is required
         else {
-            
+
             restoreHitValues(prevGLayer);
-            
+
             if (prevGLayer == null) {
                 tListener.logMessage(LogMessages.NO_GLAYER);
             }
@@ -66,59 +66,61 @@ public class IKASLLearner {
             Map<String, ArrayList<double[]>> gNodeIWeights = new HashMap<String, ArrayList<double[]>>();
             Map<String, ArrayList<String>> gNodeINames = new HashMap<String, ArrayList<String>>();
             assignInputsToGNodes(prevGLayer, iWeights, iNames, gNodeIWeights, gNodeINames);
-            
+
             //need to update nodes before Training GSOM 
             //becuase prevGLayer gets modified when GSOMTrain is called
             updateNonHitList(prevGLayer.getMap());
-            
+
             LearnLayer lLayer = new LearnLayer();
-            
+
             for (Map.Entry<String, GNode> n : prevGLayer.getMap().entrySet()) {
-                GSOMTrainer gTrainer = new GSOMTrainer();
-                gTrainer.trainNetwork(gNodeINames.get(n.getKey()), gNodeIWeights.get(n.getKey()));
-                Map<String, LNode> trainedMap = gTrainer.getCopyMap();
+                if (!nonHitNodes.contains(n.getValue())) {
+                    GSOMTrainer gTrainer = new GSOMTrainer();
+                    gTrainer.trainNetwork(gNodeINames.get(n.getKey()), gNodeIWeights.get(n.getKey()));
+                    Map<String, LNode> trainedMap = gTrainer.getCopyMap();
 
-                GSOMSmoothner gSmoother = new GSOMSmoothner();
-                gSmoother.smoothGSOM(trainedMap, gNodeIWeights.get(n.getKey()));
+                    GSOMSmoothner gSmoother = new GSOMSmoothner();
+                    gSmoother.smoothGSOM(trainedMap, gNodeIWeights.get(n.getKey()));
 
-                GCoordAdjuster gAdjuster = new GCoordAdjuster();
-                Map<String, LNode> adjustedMap = gAdjuster.adjustMapCoords(trainedMap);
-            
-                GSOMTester gTester = new GSOMTester();
-                gTester.testGSOM(adjustedMap, gNodeIWeights.get(n.getKey()), gNodeINames.get(n.getKey()));
-                
-                lLayer.addMap(n.getKey(), adjustedMap);
+                    GCoordAdjuster gAdjuster = new GCoordAdjuster();
+                    Map<String, LNode> adjustedMap = gAdjuster.adjustMapCoords(trainedMap);
+
+                    GSOMTester gTester = new GSOMTester();
+                    gTester.testGSOM(adjustedMap, gNodeIWeights.get(n.getKey()), gNodeINames.get(n.getKey()));
+
+                    lLayer.addMap(n.getKey(), adjustedMap);
+                }
             }
-            
-            
-            tListener.logMessage("Learning Phase Completed. "+lLayer.getMap().size()+" Maps created.");
+
+
+            tListener.logMessage("Learning Phase Completed. " + lLayer.getMap().size() + " Maps created.");
             String mapResults = "Number of nodes in Maps: ";
-            for(Map<String,LNode> e : lLayer.getMap().values()){
-                mapResults += e.size()+" ";
+            for (Map<String, LNode> e : lLayer.getMap().values()) {
+                mapResults += e.size() + " ";
             }
             tListener.logMessage(mapResults);
-            tListener.logMessage("Non-Hit Node Count: "+nonHitNodes.size());
+            tListener.logMessage("Non-Hit Node Count: " + nonHitNodes.size());
             String nonHitMsg = "Non-Hit Nodes: ";
-            for(GNode n : nonHitNodes){
-                nonHitMsg += n.getParentID()+Constants.NODE_TOKENIZER+Utils.generateIndexString(n.getLc(), n.getId())+" ";
+            for (GNode n : nonHitNodes) {
+                nonHitMsg += n.getParentID() + Constants.NODE_TOKENIZER + Utils.generateIndexString(n.getLc(), n.getId()) + " ";
             }
             tListener.logMessage(nonHitMsg);
             tListener.logMessage("\n");
-            
+
             return lLayer;
 
 
         }
     }
 
-    private void restoreHitValues(GenLayer gLayer){
-        for(Map.Entry<String,GNode> e : gLayer.getMap().entrySet()){
+    private void restoreHitValues(GenLayer gLayer) {
+        for (Map.Entry<String, GNode> e : gLayer.getMap().entrySet()) {
             e.getValue().setHitValue(0);
         }
     }
-    
+
     private void assignInputsToGNodes(GenLayer prevGLayer, ArrayList<double[]> iWeights, ArrayList<String> iNames,
-        Map<String, ArrayList<double[]>> gNodeIWeights, Map<String, ArrayList<String>> gNodeINames) {
+            Map<String, ArrayList<double[]>> gNodeIWeights, Map<String, ArrayList<String>> gNodeINames) {
 
         Map<String, GNode> prevGNodes = prevGLayer.getMap();
 
@@ -146,26 +148,30 @@ public class IKASLLearner {
             ArrayList<String> nameArrForInput = gNodeINames.get(gID);
             nameArrForInput.add(iNames.get(i));
             gNodeINames.put(gID, nameArrForInput);
-            
+
             //update hit value
             GNode node = prevGNodes.get(gID);
             node.increaseHitVal();
-            prevGNodes.put(gID,node);
+            prevGNodes.put(gID, node);
 
         }
     }
 
-    public void updateNonHitList(Map<String,GNode> map){
-        if(nonHitNodes==null){
-            nonHitNodes = new ArrayList<GNode>();
-        }
-        for(Map.Entry<String,GNode> entry : map.entrySet()){
-            if(entry.getValue().getHitValue()==0){
+    //previously this method was implemented to keep all the non-hit nodes recorded
+    //in 'nonHitNodes' list. But this is incorrect because at the end we're adding non hit nodes 
+    //to GLayer. Therefore, according to this implementation, if a node becomes a non hit node
+    //once, it'll remain a non-hit node for the rest of learning cycles
+    public void updateNonHitList(Map<String, GNode> map) {
+
+        nonHitNodes = new ArrayList<GNode>();
+
+        for (Map.Entry<String, GNode> entry : map.entrySet()) {
+            if (entry.getValue().getHitValue() == 0) {
                 nonHitNodes.add(entry.getValue());
             }
         }
     }
-    
+
     public ArrayList<GNode> getNonHitNodes(int currLC) {
         return nonHitNodes;
     }

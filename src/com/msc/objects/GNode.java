@@ -5,6 +5,7 @@
 package com.msc.objects;
 
 import com.msc.enums.Behavior;
+import com.msc.utils.Utils;
 import java.io.Serializable;
 import org.omg.CORBA.TRANSIENT;
 
@@ -95,4 +96,12 @@ public class GNode extends Node{
         this.parentID = parentID;
     }
  
+    @Override
+    public boolean equals(Object o){
+        if(Utils.generateIndexString(((GNode)o).getLc(),((GNode)o).getId()).equals(
+                Utils.generateIndexString(lc, id))){
+            return true;
+        }
+        return false;
+    }
 }
