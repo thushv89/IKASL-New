@@ -92,7 +92,6 @@ public class IKASLLearner {
                 }
             }
 
-
             tListener.logMessage("Learning Phase Completed. " + lLayer.getMap().size() + " Maps created.");
             String mapResults = "Number of nodes in Maps: ";
             for (Map<String, LNode> e : lLayer.getMap().values()) {
@@ -108,7 +107,6 @@ public class IKASLLearner {
             tListener.logMessage("\n");
 
             return lLayer;
-
 
         }
     }

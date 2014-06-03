@@ -5,6 +5,7 @@
 package com.msc.ikasl.core;
 
 import com.msc.enums.GenType;
+import com.msc.ikasl.auxi.InterLinkGenerator;
 import com.msc.input.NumericalDataParser;
 import com.msc.listeners.TaskListener;
 import com.msc.objects.GNode;
@@ -36,7 +37,7 @@ public class IKASLRun {
     private IKASLGeneralizer generalizer;
     private TaskListener tListener;
     private String dir;
-
+    
     public IKASLRun(TaskListener tListener) {
         this.tListener = tListener;
 
@@ -50,6 +51,7 @@ public class IKASLRun {
         learner = new IKASLLearner(tListener);
         generalizer = new IKASLGeneralizer(tListener);
 
+        
     }
 
     public IKASLRun(TaskListener tListener, String dir) {
@@ -128,6 +130,16 @@ public class IKASLRun {
             allGLayers.add(currGLayer);
 
             getClusterPurityVector(currGLayer, prevGLayer, currLC);
+            
+            InterLinkGenerator linkGen = new InterLinkGenerator();
+            ArrayList<String> links = linkGen.getAllIntsectLinks(currGLayer, allGNodeInputs.get(currLC), prevGLayer, allGNodeInputs.get(currLC-1), 50);
+            
+            tListener.logMessage(LogMessages.SEPARATOR);
+            tListener.logMessage("Intersection Links");
+            for(String s : links) {
+                tListener.logMessage(s);
+            }
+            tListener.logMessage(LogMessages.SEPARATOR);
 
         }
         currLC++;
@@ -140,6 +152,9 @@ public class IKASLRun {
         allINames.clear();
         allIWeights.clear();
 
+        parser = new NumericalDataParser(tListener);
+        learner = new IKASLLearner(tListener);
+        generalizer = new IKASLGeneralizer(tListener);
     }
 
     //WE haven't considered what happens when the parent node is not from the immediate previous layer, but from a layer below that

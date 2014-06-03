@@ -58,7 +58,6 @@ public class NodeInfoUtility extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         commonResultTxt = new javax.swing.JTextArea();
         commonIn1Txt = new javax.swing.JTextField();
-        commonIn2Txt = new javax.swing.JTextField();
         commonBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -170,12 +169,10 @@ public class NodeInfoUtility extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(commonIn1Txt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(commonIn2Txt, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                        .addComponent(commonIn1Txt)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(commonBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -184,11 +181,9 @@ public class NodeInfoUtility extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(commonIn1Txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(commonIn2Txt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(commonBtn))
                 .addGap(3, 3, 3)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -211,8 +206,8 @@ public class NodeInfoUtility extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(71, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -227,8 +222,8 @@ public class NodeInfoUtility extends javax.swing.JFrame {
         GenLayer reqLayer = null;
         //The node essentially does not need to be in the GLayer with index lc,
         //It can be in any layer above lc as it can propagate to other layers as a non-hit node
-        for(int i=iRun.getCurrLC()-1;i>=lc;i--){
-            if(iRun.getAllGenLayers().get(i).getMap().containsKey(nodeWeightInTxt.getText())){
+        for (int i = iRun.getCurrLC() - 1; i >= lc; i--) {
+            if (iRun.getAllGenLayers().get(i).getMap().containsKey(nodeWeightInTxt.getText())) {
                 reqLayer = iRun.getAllGenLayers().get(i);
                 break;
             }
@@ -270,38 +265,41 @@ public class NodeInfoUtility extends javax.swing.JFrame {
 
     private void commonBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commonBtnActionPerformed
         String result = "";
-        String[] in1Str = commonIn1Txt.getText().split(Constants.I_J_TOKENIZER);
-        int lc1 = Integer.parseInt(in1Str[0]);
-        int id1 = Integer.parseInt(in1Str[1]);
-        String[] in2Str = commonIn2Txt.getText().split(Constants.I_J_TOKENIZER);
-        int lc2 = Integer.parseInt(in2Str[0]);
-        int id2 = Integer.parseInt(in2Str[1]);
+        String[] allIn = commonIn1Txt.getText().split(Constants.NODE_TOKENIZER);
+
+        String[] inStrInit = allIn[0].split(Constants.I_J_TOKENIZER);            
+        int lcInit = Integer.parseInt(inStrInit[0]);
+            
+        List<String> commonIn = new ArrayList<String>();
+        String[] inputsInit = iRun.getAllGenLayerInputs().get(lcInit).get(allIn[0]).split(Constants.INPUT_TOKENIZER);
+        commonIn.addAll(Arrays.asList(inputsInit));
         
-        String inputs1 = "";
-        String inputs2 = "";
-        
-        for(int i=iRun.getCurrLC()-1;i>=Math.min(lc1, lc2);i--){
-            if(iRun.getAllGenLayerInputs().get(i).containsKey(commonIn1Txt.getText())){
-                inputs1 = iRun.getAllGenLayerInputs().get(i).get(commonIn1Txt.getText());
+        for (int i = 1; i < allIn.length; i++) {
+            String[] inStr = allIn[i].split(Constants.I_J_TOKENIZER);            
+
+            int lc = Integer.parseInt(inStr[0]);
+
+            String inputs = "";
+            
+            for (int j = iRun.getCurrLC() - 1; j >= lc; j--) {
+                if (iRun.getAllGenLayerInputs().get(j).containsKey(allIn[i])) {
+                    inputs = iRun.getAllGenLayerInputs().get(j).get(allIn[i]);
+                    break;
+                }
             }
-            if(iRun.getAllGenLayerInputs().get(i).containsKey(commonIn2Txt.getText())){
-                inputs2 = iRun.getAllGenLayerInputs().get(i).get(commonIn2Txt.getText());
-            }
+
+            String[] inputTokens = inputs.split(Constants.INPUT_TOKENIZER);
+
+            List<String> in2List = Arrays.asList(inputTokens);
+
+            commonIn.retainAll(in2List);
         }
         
-        String[] input1Tokens = inputs1.split(Constants.I_J_TOKENIZER);
-        String[] input2Tokens = inputs2.split(Constants.I_J_TOKENIZER);
-        
-        List<String> in1List = Arrays.asList(input1Tokens);
-        List<String> in2List = Arrays.asList(input2Tokens);
-        
-        in1List.retainAll(in2List);
-        
-        
-        for(String s : in1List){
-            result += s+", ";
+        for (String s : commonIn) {
+            result += s + ", ";
         }
-        
+
+        commonResultTxt.setLineWrap(true);
         commonResultTxt.setText(result);
     }//GEN-LAST:event_commonBtnActionPerformed
 
@@ -309,10 +307,14 @@ public class NodeInfoUtility extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
+        /*
+         * Set the Nimbus look and feel
+         */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the
+         * default look and feel. For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -332,21 +334,22 @@ public class NodeInfoUtility extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        /*
+         * Create and display the form
+         */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new NodeInfoUtility().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField ancestorInTxt;
     private javax.swing.JLabel ancestorResultLbl;
     private javax.swing.JButton ancestorsBtn;
     private javax.swing.JButton commonBtn;
     private javax.swing.JTextField commonIn1Txt;
-    private javax.swing.JTextField commonIn2Txt;
     private javax.swing.JTextArea commonResultTxt;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
