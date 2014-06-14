@@ -1,5 +1,6 @@
 package com.msc.utils;
 
+import com.msc.enums.DistanceType;
 import com.msc.enums.GenType;
 
 public class AlgoParameters {
@@ -11,6 +12,7 @@ public class AlgoParameters {
     private static double FD;
     public static double START_LEARNING_RATE;
     public static int MAX_ITERATIONS;
+    public static DistanceType dType;
     
     public static int LEARN_CYCLES;
     public static GenType gType;
@@ -28,7 +30,8 @@ public class AlgoParameters {
     public static double MERGE_ONE_DIM_THRESHOLD=0.2;
     
     public static double getMergeThreshold(){
-        MERGE_THRESHOLD = Utils.calcEucDist(Utils.getUniformVector(0.1, DIMENSIONS), Utils.getZeroVector(DIMENSIONS), DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
+        MERGE_THRESHOLD = Utils.calcDist(Utils.getUniformVector(0.1, DIMENSIONS), Utils.getZeroVector(DIMENSIONS), 
+                DIMENSIONS, AlgoParameters.ATTR_WEIGHTS,dType);
         return MERGE_THRESHOLD;
     }
     

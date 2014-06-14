@@ -32,6 +32,7 @@ public class IKASLRun {
     private ArrayList<Map<String, String>> allGNodeInputs;
     private ArrayList<ArrayList<double[]>> allIWeights;
     private ArrayList<ArrayList<String>> allINames;
+    private ArrayList<String> allIntSectLinks;
     private NumericalDataParser parser;
     private IKASLLearner learner;
     private IKASLGeneralizer generalizer;
@@ -47,6 +48,8 @@ public class IKASLRun {
         allINames = new ArrayList<ArrayList<String>>();
         allIWeights = new ArrayList<ArrayList<double[]>>();
 
+        allIntSectLinks = new ArrayList<String>();
+        
         parser = new NumericalDataParser(tListener);
         learner = new IKASLLearner(tListener);
         generalizer = new IKASLGeneralizer(tListener);
@@ -133,6 +136,7 @@ public class IKASLRun {
             
             InterLinkGenerator linkGen = new InterLinkGenerator();
             ArrayList<String> links = linkGen.getAllIntsectLinks(currGLayer, allGNodeInputs.get(currLC), prevGLayer, allGNodeInputs.get(currLC-1), 50);
+            allIntSectLinks.addAll(links);
             
             tListener.logMessage(LogMessages.SEPARATOR);
             tListener.logMessage("Intersection Links");
@@ -308,8 +312,8 @@ public class IKASLRun {
         ArrayList<String> selectedNodeIDs = new ArrayList<String>();
 
         //double threshold = hitThresh * Math.sqrt(neighRad) * Math.sqrt(AlgoParameters.MERGE_ONE_DIM_THRESHOLD*AlgoParameters.DIMENSIONS);
-        double distThreshold = Utils.calcEucDist(Utils.getUniformVector(AlgoParameters.MERGE_ONE_DIM_THRESHOLD, AlgoParameters.DIMENSIONS),
-                Utils.getZeroVector(AlgoParameters.DIMENSIONS), AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
+        double distThreshold = Utils.calcDist(Utils.getUniformVector(AlgoParameters.MERGE_ONE_DIM_THRESHOLD, AlgoParameters.DIMENSIONS),
+                Utils.getZeroVector(AlgoParameters.DIMENSIONS), AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS, AlgoParameters.dType);
         double threshold = hitThresh * Math.sqrt(neighRad) * Math.pow(distThreshold, 2);
 
         for (Entry<String, Map<String, LNode>> eMap : lMap.entrySet()) {
@@ -363,7 +367,8 @@ public class IKASLRun {
                                 + (nodes.get(i).getY() - nodes.get(j).getY()) * (nodes.get(i).getY() - nodes.get(j).getY());
                         pDistance = Math.sqrt(pDistance);
 
-                        double eDistance = Utils.calcEucDist(nodes.get(i).getWeights(), nodes.get(j).getWeights(), AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
+                        double eDistance = Utils.calcDist(nodes.get(i).getWeights(), nodes.get(j).getWeights(), 
+                                AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS, AlgoParameters.dType);
 
                         if (pDistance < minPDist) {
                             minPDist = pDistance;
@@ -412,6 +417,10 @@ public class IKASLRun {
         return allGNodeInputs;
     }
 
+    public ArrayList<String> getAllIntSectLinks(){
+        return allIntSectLinks;
+    }
+    
     class ValueComparator implements Comparator<String> {
 
         Map<String, Double> base;

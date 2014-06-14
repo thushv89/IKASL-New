@@ -4,6 +4,7 @@
  */
 package com.msc.ui;
 
+import com.msc.enums.DistanceType;
 import com.msc.enums.GenType;
 import com.msc.ikasl.core.IKASLRun;
 import com.msc.listeners.TaskListener;
@@ -24,9 +25,10 @@ import javax.swing.JOptionPane;
  *
  * @author Thushan Ganegedara
  */
-public class MainWindow extends javax.swing.JFrame implements TaskListener{
+public class MainWindow extends javax.swing.JFrame implements TaskListener {
 
     private String inputDir;
+
     /**
      * Creates new form MainWindow
      */
@@ -34,10 +36,10 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
         iRun = new IKASLRun(this);
         initComponents();
         this.setLocationRelativeTo(null);
-        
-    }
 
+    }
     IKASLRun iRun;
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -47,6 +49,7 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         inputDirTxt = new javax.swing.JTextField();
         browseBtn = new javax.swing.JButton();
@@ -79,6 +82,11 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
         jPanel5 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        patternRBtn = new javax.swing.JRadioButton();
+        anomalyRBtn = new javax.swing.JRadioButton();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        distCombo = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("IKASL v2");
@@ -208,7 +216,7 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lcTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(aggCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -309,7 +317,7 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9)
                     .addComponent(jLabel8))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -319,26 +327,63 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
                 .addComponent(jLabel8))
         );
 
+        buttonGroup1.add(patternRBtn);
+        patternRBtn.setText("General Patterns");
+
+        buttonGroup1.add(anomalyRBtn);
+        anomalyRBtn.setText("Anomaly Patterns");
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Distance"));
+
+        jLabel10.setText("Distance Type: ");
+
+        distCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Manhattan", "Euclidean" }));
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(distCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jLabel10)
+                .addComponent(distCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(statusLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(statusLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(runOneBtn)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(runAllBtn)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(clrBtn)))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(runOneBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(runAllBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clrBtn)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(9, 9, 9)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(anomalyRBtn)
+                            .addComponent(patternRBtn)))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(10, 10, 10)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -354,13 +399,19 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 183, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(patternRBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(anomalyRBtn)
+                        .addGap(108, 108, 108)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(runAllBtn)
                             .addComponent(runOneBtn)
@@ -388,7 +439,7 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
 
     private void browseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseBtnActionPerformed
         JFileChooser chooser = new JFileChooser(".");//E:\GSOM2_v3\GSOM2
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);        
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int choice = chooser.showOpenDialog(null);
 
         if (choice != JFileChooser.APPROVE_OPTION) {
@@ -411,73 +462,86 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
         NodeInfoUtility niu = new NodeInfoUtility();
         niu.setData(iRun);
         niu.setVisible(true);
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void saveWeightsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveWeightsBtnActionPerformed
         ArrayList<GenLayer> allGlayers = iRun.getAllGenLayers();
-        
+
         FileWriter fw = new FileWriter();
         fw.initialize("Node Weights.txt");
         DecimalFormat df = new DecimalFormat("#.000");
-            
-        for(GenLayer gL : allGlayers){
+
+        int currLayer = 0;
+        for (GenLayer gL : allGlayers) {
             fw.writeData("Learn Cycle =======================\n");
-            for(Map.Entry<String,GNode> e : gL.getMap().entrySet()){
-                String str = e.getKey()+"\t";
-                for(double d : e.getValue().getWeights()){
-                    str += df.format(d) + "\t";
+            for (Map.Entry<String, GNode> e : gL.getMap().entrySet()) {
+                //for each learn cycle, nodes printed should be from that particular learn cycle only
+                //(i.e. cannot be from previous learn cycles)
+                if (Integer.parseInt(e.getKey().split(Constants.I_J_TOKENIZER)[0]) == currLayer) {
+                    String str = e.getKey() + "\t";
+                    for (double d : e.getValue().getWeights()) {
+                        str += df.format(d) + "\t";
+                    }
+                    fw.writeData(str);
                 }
-                fw.writeData(str);
             }
             fw.writeData("=====================================\n");
+            currLayer++;
         }
-        
+
         fw.close();
     }//GEN-LAST:event_saveWeightsBtnActionPerformed
 
-    private void readAndSetAlgoParameters(){
+    private void readAndSetAlgoParameters() {
+        if(distCombo.getSelectedIndex()==0){
+            AlgoParameters.dType = DistanceType.MANHATTAN;
+        }else if(distCombo.getSelectedIndex()==1){
+            AlgoParameters.dType = DistanceType.EUCLIDEAN;
+        }
+        
         AlgoParameters.SPREAD_FACTOR = Double.parseDouble(sfTxt.getText());
         AlgoParameters.START_LEARNING_RATE = Double.parseDouble(lrTxt.getText());
         AlgoParameters.MAX_NEIGHBORHOOD_RADIUS = Double.parseDouble(nrTxt.getText());
         AlgoParameters.MAX_ITERATIONS = Integer.parseInt(iterTxt.getText());
-        
+
         AlgoParameters.LEARN_CYCLES = Integer.parseInt(lcTxt.getText());
         AlgoParameters.HIT_THRESHOLD = Integer.parseInt(htTxt.getText());
-        
-        if(aggCombo.getSelectedIndex()==0){
+
+        if (aggCombo.getSelectedIndex() == 0) {
             AlgoParameters.gType = GenType.AVG;
-        }else if(aggCombo.getSelectedIndex()==1){
+        } else if (aggCombo.getSelectedIndex() == 1) {
             AlgoParameters.gType = GenType.FUZZY;
         }
-        
+
         FileReader fr = new FileReader();
-        ArrayList<String> minMaxList = fr.readLines(inputDir+"\\"+Constants.BOUNDS_FILE);
-        
+        ArrayList<String> minMaxList = fr.readLines(inputDir + "\\" + Constants.BOUNDS_FILE);
+
         String[] minStr = minMaxList.get(0).split(Constants.INPUT_TOKENIZER);
         double[] min = new double[minStr.length];
-        
+
         String[] maxStr = minMaxList.get(1).split(Constants.INPUT_TOKENIZER);
         double[] max = new double[maxStr.length];
-        
-        for(int i=0;i<minStr.length;i++){
-            min[i]=Double.parseDouble(minStr[i]);
-            max[i]=Double.parseDouble(maxStr[i]);
+
+        for (int i = 0; i < minStr.length; i++) {
+            min[i] = Double.parseDouble(minStr[i]);
+            max[i] = Double.parseDouble(maxStr[i]);
         }
-        
+
         AlgoParameters.MIN_BOUNDS = min;
         AlgoParameters.MAX_BOUNDS = max;
-        
-        String weightsStr = fr.readLines(inputDir+"\\"+Constants.WEIGHT_FILE).get(0);
+
+        String weightsStr = fr.readLines(inputDir + "\\" + Constants.WEIGHT_FILE).get(0);
         String[] weightTokens = weightsStr.split(Constants.INPUT_TOKENIZER);
         double[] weights = new double[weightTokens.length];
-        
-        for(int i=0;i<weightTokens.length;i++){
-            weights[i]=Double.parseDouble(weightTokens[i]);
+
+        for (int i = 0; i < weightTokens.length; i++) {
+            weights[i] = Double.parseDouble(weightTokens[i]);
         }
-        
+
         AlgoParameters.ATTR_WEIGHTS = weights;
     }
+
     /**
      * @param args the command line arguments
      */
@@ -513,7 +577,6 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
          * Create and display the form
          */
         java.awt.EventQueue.invokeLater(new Runnable() {
-
             public void run() {
                 new MainWindow().setVisible(true);
             }
@@ -521,13 +584,17 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox aggCombo;
+    private javax.swing.JRadioButton anomalyRBtn;
     private javax.swing.JButton browseBtn;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton clrBtn;
+    private javax.swing.JComboBox distCombo;
     private javax.swing.JTextField htTxt;
     private javax.swing.JTextField inputDirTxt;
     private javax.swing.JTextField iterTxt;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -541,12 +608,14 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener{
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField lcTxt;
     private javax.swing.JTextArea logTxt;
     private javax.swing.JTextField lrTxt;
     private javax.swing.JTextField nrTxt;
+    private javax.swing.JRadioButton patternRBtn;
     private javax.swing.JButton runAllBtn;
     private javax.swing.JButton runOneBtn;
     private javax.swing.JButton saveWeightsBtn;

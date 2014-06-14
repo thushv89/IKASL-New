@@ -1,5 +1,6 @@
 package com.msc.utils;
 
+import com.msc.enums.DistanceType;
 import com.msc.objects.GNode;
 import java.util.Map;
 
@@ -33,9 +34,9 @@ public class Utils {
     public static double getLearningRate(int iter, int nodeCount) {
         double minPhi = 0.95;
         //if 3.8 used for a node count < 4 learning rate becomes negative
-        if(nodeCount<4){
+        if (nodeCount < 4) {
             return AlgoParameters.START_LEARNING_RATE * Math.exp(-(double) iter / AlgoParameters.MAX_ITERATIONS) * (1 - minPhi);
-        }else{
+        } else {
             return AlgoParameters.START_LEARNING_RATE * Math.exp(-(double) iter / AlgoParameters.MAX_ITERATIONS) * (1 - (3.8 / nodeCount));
         }
     }
@@ -50,7 +51,8 @@ public class Utils {
         double currDist = Double.MAX_VALUE;
         double minDist = Double.MAX_VALUE;
         for (Map.Entry<String, LNode> entry : nodeMap.entrySet()) {
-            currDist = Utils.calcEucDist(input, entry.getValue().getWeights(), AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
+            currDist = Utils.calcDist(input, entry.getValue().getWeights(), 
+                    AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS, AlgoParameters.dType);
             if (currDist < minDist) {
                 winner = entry.getValue();
                 minDist = currDist;
@@ -59,37 +61,38 @@ public class Utils {
         }
         return winner;
     }
-    
-    public static double[] getUnitVector(int dimensions){
+
+    public static double[] getUnitVector(int dimensions) {
         double[] unitVec = new double[dimensions];
-        for(int i=0;i<dimensions;i++){
-            unitVec[i]=1;
+        for (int i = 0; i < dimensions; i++) {
+            unitVec[i] = 1;
         }
         return unitVec;
     }
-    
-    public static double[] getZeroVector(int dimensions){
+
+    public static double[] getZeroVector(int dimensions) {
         double[] zeroVec = new double[dimensions];
-        for(int i=0;i<dimensions;i++){
-            zeroVec[i]=0;
+        for (int i = 0; i < dimensions; i++) {
+            zeroVec[i] = 0;
         }
         return zeroVec;
     }
-    
-    public static double[] getUniformVector(double value, int dimensions){
+
+    public static double[] getUniformVector(double value, int dimensions) {
         double[] unifVec = new double[dimensions];
-        for(int i=0;i<dimensions;i++){
-            unifVec[i]=value;
+        for (int i = 0; i < dimensions; i++) {
+            unifVec[i] = value;
         }
         return unifVec;
     }
-    
+
     public static GNode selectGWinner(Map<String, GNode> nodeMap, double[] input) {
         GNode winner = null;
         double currDist = Double.MAX_VALUE;
         double minDist = Double.MAX_VALUE;
         for (Map.Entry<String, GNode> entry : nodeMap.entrySet()) {
-            currDist = Utils.calcEucDist(input, entry.getValue().getWeights(), AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
+            currDist = Utils.calcDist(input, entry.getValue().getWeights(), 
+                    AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS,AlgoParameters.dType);
             if (currDist < minDist) {
                 winner = entry.getValue();
                 minDist = currDist;
@@ -101,45 +104,53 @@ public class Utils {
 
     public static LNode adjustNeighbourWeight(LNode node, LNode winner, double[] input, double radius, double learningRate) {
         double nodeDistSqr = Math.pow(winner.getX() - node.getX(), 2) + Math.pow(winner.getY() - node.getY(), 2);
-        double radiusSqr = radius*radius;
-        
+        double radiusSqr = radius * radius;
+
         //if node is within the radius
-        if (nodeDistSqr < radiusSqr) {               
-            double influence = Math.exp(-(double)nodeDistSqr / (2 * radiusSqr));
+        if (nodeDistSqr < radiusSqr) {
+            double influence = Math.exp(-(double) nodeDistSqr / (2 * radiusSqr));
             node.adjustWeights(input, influence, learningRate);
         }
         return node;
     }
 
-    public static double getRadius(int iter,double timeConst) {
+    public static double getRadius(int iter, double timeConst) {
         return AlgoParameters.DIMENSIONS * Math.exp(-(double) iter / timeConst);
     }
 
-    public static double calcEucDist(double[] in1, double[] in2, int dimensions, double[] weights) {
+    public static double calcDist(double[] in1, double[] in2, int dimensions, double[] weights, DistanceType dType) {
         double dist = 0.0;
-        for (int i = 0; i < dimensions; i++) {
-            dist += Math.pow(in1[i] - in2[i], 2)*weights[i];
-        }
+        if (dType == DistanceType.EUCLIDEAN) {
+            for (int i = 0; i < dimensions; i++) {
+                dist += Math.pow(in1[i] - in2[i], 2) * weights[i];
+            }
 
-        return Math.sqrt(dist);
+            return Math.sqrt(dist);
+        }else if (dType == DistanceType.MANHATTAN){
+            for (int i = 0; i < dimensions; i++) {
+                dist += Math.abs(in1[i] - in2[i]) * weights[i];
+            }
+
+            return dist;
+        }
+        return -Double.MAX_VALUE;
     }
-    
-    public static int[] getMinMaxMapCoord(Map<String,Node> map){
-        ArrayList<Integer> allX= new ArrayList<Integer>();
-        ArrayList<Integer> allY= new ArrayList<Integer>();
+
+    public static int[] getMinMaxMapCoord(Map<String, Node> map) {
+        ArrayList<Integer> allX = new ArrayList<Integer>();
+        ArrayList<Integer> allY = new ArrayList<Integer>();
         int[] result = new int[4];
-        for(String s : map.keySet()){
+        for (String s : map.keySet()) {
             String[] tokens = s.split(",");
             allX.add(Integer.parseInt(tokens[0]));
             allY.add(Integer.parseInt(tokens[1]));
         }
-        
+
         result[0] = Collections.min(allX);
         result[1] = Collections.min(allY);
         result[2] = Collections.max(allX);
         result[3] = Collections.max(allY);
-        
+
         return result;
     }
-    
 }

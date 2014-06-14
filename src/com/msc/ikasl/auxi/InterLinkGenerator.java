@@ -10,6 +10,7 @@ import com.msc.utils.Constants;
 import com.msc.utils.Utils;
 import com.sun.corba.se.impl.orbutil.closure.Constant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -116,4 +117,48 @@ public class InterLinkGenerator {
         
         return 0;
     }
+    
+    public ArrayList<String> getFullLinks(ArrayList<String> links, int minLength, int minCount){
+        ArrayList<String> linksCopy = new ArrayList<String>(links);
+        Map<String,ArrayList<Integer>> paChiCount = new HashMap<String, ArrayList<Integer>>();
+        HashSet<String> allNodes = new HashSet<String>();
+        for(int i=0;i<linksCopy.size();i++){
+            String[] tokens = linksCopy.get(i).split(Constants.NODE_TOKENIZER);
+            for(String s : tokens){
+                if(s.contains(Constants.PARENT_TOKENIZER)){
+                    String[] pTokens = s.split(Constants.PARENT_TOKENIZER);
+                    for(String t : pTokens){
+                        allNodes.add(t);
+                    }
+                }else{
+                    allNodes.add(s);
+                }
+            }
+        }
+        
+        //get parent child count for each node
+        for(String s : allNodes){
+            ArrayList<Integer> paChiVals = new ArrayList<Integer>();
+            int paVal = 0;
+            int chiVal = 0;
+            for(int i=0;i<linksCopy.size();i++){
+                String[] tokens = linksCopy.get(i).split(Constants.NODE_TOKENIZER);
+                if(tokens[0].contains(s)){
+                    chiVal++;
+                }else if(tokens[1].contains(s)){
+                    paVal++;
+                }
+            }
+            paChiVals.add(paVal);
+            paChiVals.add(chiVal);
+            
+            paChiCount.put(s, paChiVals);
+        }
+        
+        for(int i=0;i<linksCopy.size();i++){
+            
+        }
+        return null;
+    }
+    
 }

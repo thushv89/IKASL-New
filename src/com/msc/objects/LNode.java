@@ -51,7 +51,8 @@ public class LNode extends Node{
     }
     
     	public void calcAndUpdateErr(double[] iWeight){
-		this.errorValue += Utils.calcEucDist(this.weights, iWeight,AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS);
+		this.errorValue += Utils.calcDist(this.weights, iWeight,
+                        AlgoParameters.DIMENSIONS, AlgoParameters.ATTR_WEIGHTS,AlgoParameters.dType);
 	}
 
 }
