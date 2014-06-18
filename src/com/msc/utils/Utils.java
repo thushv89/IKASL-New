@@ -122,7 +122,7 @@ public class Utils {
         double dist = 0.0;
         if (dType == DistanceType.EUCLIDEAN) {
             for (int i = 0; i < dimensions; i++) {
-                dist += Math.pow(in1[i] - in2[i], 2) * weights[i];
+                dist += (in1[i] - in2[i])*(in1[i] - in2[i]) * weights[i];
             }
 
             return Math.sqrt(dist);
@@ -132,6 +132,12 @@ public class Utils {
             }
 
             return dist;
+        }else if(dType == DistanceType.FRACT_HALF){
+            for (int i = 0; i < dimensions; i++) {
+                dist += Math.sqrt(Math.abs(in1[i] - in2[i])) * weights[i];
+            }
+
+            return dist*dist;
         }
         return -Double.MAX_VALUE;
     }

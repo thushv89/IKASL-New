@@ -337,7 +337,8 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener {
 
         jLabel10.setText("Distance Type: ");
 
-        distCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Manhattan", "Euclidean" }));
+        distCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Manhattan", "Euclidean", "Fractional 0.5", "Fractional 0.25" }));
+        distCombo.setSelectedIndex(1);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -498,6 +499,10 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener {
             AlgoParameters.dType = DistanceType.MANHATTAN;
         }else if(distCombo.getSelectedIndex()==1){
             AlgoParameters.dType = DistanceType.EUCLIDEAN;
+        }else if(distCombo.getSelectedIndex()==2){
+            AlgoParameters.dType = DistanceType.FRACT_HALF;
+        }else if(distCombo.getSelectedIndex()==3){
+            AlgoParameters.dType = DistanceType.FRACT_QUARTER;
         }
         
         AlgoParameters.SPREAD_FACTOR = Double.parseDouble(sfTxt.getText());

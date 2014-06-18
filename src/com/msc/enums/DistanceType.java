@@ -9,5 +9,5 @@ package com.msc.enums;
  * @author Thush
  */
 public enum DistanceType {
-    MANHATTAN,EUCLIDEAN
+    MANHATTAN,EUCLIDEAN,FRACT_HALF,FRACT_QUARTER
 }

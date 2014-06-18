@@ -563,11 +563,14 @@
         <Component class="javax.swing.JComboBox" name="distCombo">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="2">
+              <StringArray count="4">
                 <StringItem index="0" value="Manhattan"/>
                 <StringItem index="1" value="Euclidean"/>
+                <StringItem index="2" value="Fractional 0.5"/>
+                <StringItem index="3" value="Fractional 0.25"/>
               </StringArray>
             </Property>
+            <Property name="selectedIndex" type="int" value="1"/>
           </Properties>
         </Component>
       </SubComponents>

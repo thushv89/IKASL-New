@@ -13,6 +13,7 @@ import com.msc.objects.GenLayer;
 import com.msc.objects.LNode;
 import com.msc.objects.LearnLayer;
 import com.msc.utils.AlgoParameters;
+import com.msc.utils.ClusterQualityUtils;
 import com.msc.utils.Constants;
 import com.msc.utils.LogMessages;
 import com.msc.utils.Utils;
@@ -107,6 +108,8 @@ public class IKASLRun {
             allGLayers.add(initGLayer);
 
             mapInputsToGNodes(initGLayer, allIWeights.get(currLC), allINames.get(currLC));
+            
+            printClusterQualityMeasures();
 
         } else {
             //get currLC-1 genLayer
@@ -145,6 +148,7 @@ public class IKASLRun {
             }
             tListener.logMessage(LogMessages.SEPARATOR);
 
+            printClusterQualityMeasures();
         }
         currLC++;
     }
@@ -155,12 +159,22 @@ public class IKASLRun {
         allGNodeInputs.clear();
         allINames.clear();
         allIWeights.clear();
-
+        allIntSectLinks.clear();
+        
         parser = new NumericalDataParser(tListener);
         learner = new IKASLLearner(tListener);
         generalizer = new IKASLGeneralizer(tListener);
     }
 
+    //This method prints the Cluster Quality Measure values (RMSSTD and RS)
+    private void printClusterQualityMeasures(){
+        String result = "RMSSTD: ";
+        result += ClusterQualityUtils.getRMSSTD(allGNodeInputs.get(currLC), allIWeights.get(currLC), allINames.get(currLC)) + ", ";
+        result += "R-Squared: ";
+        result += ClusterQualityUtils.getRS(allGNodeInputs.get(currLC), allIWeights.get(currLC), allINames.get(currLC))+" ";
+        
+        tListener.logMessage(result);
+    }
     //WE haven't considered what happens when the parent node is not from the immediate previous layer, but from a layer below that
     //SOLVED Above
     private HashMap<String, Double> getClusterPurityVector(GenLayer currLayer, GenLayer prevLayer, int currLC) {
@@ -233,20 +247,6 @@ public class IKASLRun {
     
     //Taking the max as denominator can result in a low percentage if there's a branching from parent node to 2 current nodes
     //because the denominator would be the parent nodes value
-    /*private double getStringArrIntersectionPercent(String[] curr, String[] prev) {
-        int downcount = 0;
-        for (String s1 : curr) {
-            for (String s2 : prev) {
-                if (s1.equals(s2)) {
-                    downcount++;
-                    break;
-                }
-            }
-        }
-
-        double downPercent = downcount * 100.0 / Math.max(curr.length,prev.length);
-        return downPercent;
-    }*/
 
     private double getStringArrIntersectionPercent(String[] curr, String[] prev) {
         int downcount = 0;
