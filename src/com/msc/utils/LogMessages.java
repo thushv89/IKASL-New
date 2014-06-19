@@ -18,5 +18,5 @@ public class LogMessages {
     public static final String NO_GEN_TYPE = "ERROR: Incompatible Generalizer Type";
     public static final String INPUTS_NORMALIZED = "Inputs Normalized With Specified Bounds";
     public static final String LEARN_CYCLE_PREFIX = "Learning Cycle";
-    
+    public static final String NULL_GLAYER = "ERROR: Null Generalized Layer Created";
 }

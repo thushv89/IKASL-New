@@ -6,6 +6,7 @@ package com.msc.ui;
 
 import com.msc.enums.DistanceType;
 import com.msc.enums.GenType;
+import com.msc.enums.MiningType;
 import com.msc.ikasl.core.IKASLRun;
 import com.msc.listeners.TaskListener;
 import com.msc.objects.GNode;
@@ -328,6 +329,7 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener {
         );
 
         buttonGroup1.add(patternRBtn);
+        patternRBtn.setSelected(true);
         patternRBtn.setText("General Patterns");
 
         buttonGroup1.add(anomalyRBtn);
@@ -519,6 +521,11 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener {
             AlgoParameters.gType = GenType.FUZZY;
         }
 
+        if (patternRBtn.isSelected()){
+            AlgoParameters.MINING_TYPE = MiningType.GENERAL;
+        }else if (anomalyRBtn.isSelected()){
+            AlgoParameters.MINING_TYPE = MiningType.ANOMALY;
+        }
         FileReader fr = new FileReader();
         ArrayList<String> minMaxList = fr.readLines(inputDir + "\\" + Constants.BOUNDS_FILE);
 

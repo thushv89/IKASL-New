@@ -54,12 +54,12 @@ public class HitThresholdGenerator {
 
                 @Override
                 public int compare(LNode o1, LNode o2) {
-                    if (o1.getHitValue() > o2.getHitValue()) {
-                        return -1;
+                    if (o1.getHitValue() < o2.getHitValue()) {
+                        return 1;
                     } else if (o1.getHitValue() == o2.getHitValue()) {
                         return 0;
                     } else {
-                        return 1;
+                        return -1;
                     }
                 }
             });
@@ -230,6 +230,7 @@ public class HitThresholdGenerator {
         }
 
         // Note: this comparator imposes orderings that are inconsistent with equals.    
+        @Override
         public int compare(String a, String b) {
             if (base.get(a) >= base.get(b)) {
                 return -1;

@@ -2,6 +2,7 @@ package com.msc.utils;
 
 import com.msc.enums.DistanceType;
 import com.msc.enums.GenType;
+import com.msc.enums.MiningType;
 
 public class AlgoParameters {
 
@@ -28,6 +29,8 @@ public class AlgoParameters {
     public static double[] ANOMALY_THRESHOLDS;
     
     public static double MERGE_ONE_DIM_THRESHOLD=0.2;
+    
+    public static MiningType MINING_TYPE;
     
     public static double getMergeThreshold(){
         MERGE_THRESHOLD = Utils.calcDist(Utils.getUniformVector(0.1, DIMENSIONS), Utils.getZeroVector(DIMENSIONS), 

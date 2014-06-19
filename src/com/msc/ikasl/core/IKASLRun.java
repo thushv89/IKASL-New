@@ -5,6 +5,8 @@
 package com.msc.ikasl.core;
 
 import com.msc.enums.GenType;
+import com.msc.enums.MiningType;
+import com.msc.ikasl.auxi.HitThresholdGenerator;
 import com.msc.ikasl.auxi.InterLinkGenerator;
 import com.msc.input.NumericalDataParser;
 import com.msc.listeners.TaskListener;
@@ -101,9 +103,21 @@ public class IKASLRun {
             LearnLayer initLLayer = learner.trainAndGetLearnLayer(currLC, iWeights, iNames, null);
 
             //run IKASL aggregation and output GenLayer
-            ArrayList<String> bestHits = getHitNodeIDs(initLLayer, AlgoParameters.HIT_THRESHOLD, AlgoParameters.MAX_NEIGHBORHOOD_RADIUS);
-            GenLayer initGLayer = generalizer.generalize(currLC, initLLayer, bestHits, AlgoParameters.gType);
-
+            //ArrayList<String> bestHits = getHitNodeIDs(initLLayer, AlgoParameters.HIT_THRESHOLD, AlgoParameters.MAX_NEIGHBORHOOD_RADIUS);
+            GenLayer initGLayer=null;
+            if(AlgoParameters.MINING_TYPE == MiningType.GENERAL){
+                ArrayList<String> bestHits = HitThresholdGenerator.getHitNodeIDsGeneral(initLLayer, AlgoParameters.HIT_THRESHOLD, AlgoParameters.MAX_NEIGHBORHOOD_RADIUS);
+                initGLayer = generalizer.generalize(currLC, initLLayer, bestHits, AlgoParameters.gType);
+            }else if(AlgoParameters.MINING_TYPE == MiningType.ANOMALY){
+                ArrayList<String> bestHits = HitThresholdGenerator.getHitNodeIDsAnomalies(initLLayer, AlgoParameters.HIT_THRESHOLD, AlgoParameters.MAX_NEIGHBORHOOD_RADIUS);
+                initGLayer = generalizer.generalize(currLC, initLLayer, bestHits, AlgoParameters.gType);
+            
+            }
+            
+            if(initGLayer == null){
+                tListener.logMessage(LogMessages.NULL_GLAYER);
+            }
+            
             //add it to allGLayers
             allGLayers.add(initGLayer);
 
@@ -121,8 +135,19 @@ public class IKASLRun {
             LearnLayer currLLayer = learner.trainAndGetLearnLayer(currLC, iWeights, iNames, copyOfPrevGLayer);
 
             //call IKASLAggregator.aggregate(learnLayer) and output Genlayer(currLC)
-            ArrayList<String> bestHits = getHitNodeIDs(currLLayer, AlgoParameters.HIT_THRESHOLD, AlgoParameters.MAX_NEIGHBORHOOD_RADIUS);
-            GenLayer currGLayer = generalizer.generalize(currLC, currLLayer, bestHits, AlgoParameters.gType);
+            //ArrayList<String> bestHits = getHitNodeIDs(currLLayer, AlgoParameters.HIT_THRESHOLD, AlgoParameters.MAX_NEIGHBORHOOD_RADIUS);
+            GenLayer currGLayer=null;
+            if(AlgoParameters.MINING_TYPE == MiningType.GENERAL){
+                ArrayList<String> bestHits = HitThresholdGenerator.getHitNodeIDsGeneral(currLLayer, AlgoParameters.HIT_THRESHOLD, AlgoParameters.MAX_NEIGHBORHOOD_RADIUS);
+                currGLayer = generalizer.generalize(currLC, currLLayer, bestHits, AlgoParameters.gType);
+            } else if(AlgoParameters.MINING_TYPE == MiningType.ANOMALY){
+                ArrayList<String> bestHits = HitThresholdGenerator.getHitNodeIDsAnomalies(currLLayer, AlgoParameters.HIT_THRESHOLD, AlgoParameters.MAX_NEIGHBORHOOD_RADIUS);
+                currGLayer = generalizer.generalize(currLC, currLLayer, bestHits, AlgoParameters.gType);
+            }
+            
+            if(currGLayer == null){
+                tListener.logMessage(LogMessages.NULL_GLAYER);
+            }
 
             //We call mapping inputs to GNodes before adding non-hit nodes from prev GLayer to new layer
             //because otherwise it is possible to non-hit node to have inputs assigned
