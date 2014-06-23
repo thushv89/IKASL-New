@@ -79,6 +79,7 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener {
         jPanel4 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         saveWeightsBtn = new javax.swing.JButton();
+        intSectLinkBtn = new javax.swing.JButton();
         clrBtn = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
@@ -276,6 +277,13 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener {
             }
         });
 
+        intSectLinkBtn.setText("Full Intersection Links");
+        intSectLinkBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                intSectLinkBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -285,13 +293,16 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener {
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(saveWeightsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(252, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(intSectLinkBtn)
+                .addContainerGap(111, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                 .addComponent(jButton1)
-                .addComponent(saveWeightsBtn))
+                .addComponent(saveWeightsBtn)
+                .addComponent(intSectLinkBtn))
         );
 
         clrBtn.setText("Clear");
@@ -496,6 +507,10 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener {
         fw.close();
     }//GEN-LAST:event_saveWeightsBtnActionPerformed
 
+    private void intSectLinkBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_intSectLinkBtnActionPerformed
+        iRun.printFullIntersectionLinks();
+    }//GEN-LAST:event_intSectLinkBtnActionPerformed
+
     private void readAndSetAlgoParameters() {
         if(distCombo.getSelectedIndex()==0){
             AlgoParameters.dType = DistanceType.MANHATTAN;
@@ -603,6 +618,7 @@ public class MainWindow extends javax.swing.JFrame implements TaskListener {
     private javax.swing.JComboBox distCombo;
     private javax.swing.JTextField htTxt;
     private javax.swing.JTextField inputDirTxt;
+    private javax.swing.JButton intSectLinkBtn;
     private javax.swing.JTextField iterTxt;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

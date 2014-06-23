@@ -35,10 +35,11 @@ public class IKASLRun {
     private ArrayList<Map<String, String>> allGNodeInputs;
     private ArrayList<ArrayList<double[]>> allIWeights;
     private ArrayList<ArrayList<String>> allINames;
-    private ArrayList<String> allIntSectLinks;
+    private ArrayList<ArrayList<String>> allIntSectLinks;
     private NumericalDataParser parser;
     private IKASLLearner learner;
     private IKASLGeneralizer generalizer;
+    InterLinkGenerator linkGen;
     private TaskListener tListener;
     private String dir;
     
@@ -51,13 +52,13 @@ public class IKASLRun {
         allINames = new ArrayList<ArrayList<String>>();
         allIWeights = new ArrayList<ArrayList<double[]>>();
 
-        allIntSectLinks = new ArrayList<String>();
+        allIntSectLinks = new ArrayList<ArrayList<String>>();
         
         parser = new NumericalDataParser(tListener);
         learner = new IKASLLearner(tListener);
         generalizer = new IKASLGeneralizer(tListener);
-
-        
+        linkGen = new InterLinkGenerator();
+                
     }
 
     public IKASLRun(TaskListener tListener, String dir) {
@@ -162,9 +163,8 @@ public class IKASLRun {
 
             getClusterPurityVector(currGLayer, prevGLayer, currLC);
             
-            InterLinkGenerator linkGen = new InterLinkGenerator();
             ArrayList<String> links = linkGen.getAllIntsectLinks(currGLayer, allGNodeInputs.get(currLC), prevGLayer, allGNodeInputs.get(currLC-1), 50);
-            allIntSectLinks.addAll(links);
+            allIntSectLinks.add(links);
             
             tListener.logMessage(LogMessages.SEPARATOR);
             tListener.logMessage("Intersection Links");
@@ -442,8 +442,27 @@ public class IKASLRun {
         return allGNodeInputs;
     }
 
-    public ArrayList<String> getAllIntSectLinks(){
+    public ArrayList<ArrayList<String>> getAllIntSectLinks(){
         return allIntSectLinks;
+    }
+    
+    public void printFullIntersectionLinks(){
+        ArrayList<ArrayList<String>> gNodes = new ArrayList<ArrayList<String>>();
+        for(GenLayer layer : allGLayers){
+            ArrayList<String> currLayerGnodes = new ArrayList<String>();
+            for(GNode gn : layer.getCopyMap().values()){
+                currLayerGnodes.add(Utils.generateIndexString(gn.getLc(), gn.getId()));
+            }
+            gNodes.add(currLayerGnodes);
+        }
+        ArrayList<String> links = linkGen.getFullLinks3(gNodes, 3, 5, allGNodeInputs);
+        
+        tListener.logMessage("\n");
+        tListener.logMessage("Full Intersection Links -----------------------");
+        for(String s : links){
+            tListener.logMessage(s);
+        }
+        tListener.logMessage(LogMessages.SEPARATOR);
     }
     
     class ValueComparator implements Comparator<String> {
