@@ -446,7 +446,7 @@ public class IKASLRun {
         return allIntSectLinks;
     }
     
-    public void printFullIntersectionLinks(){
+    public void printFullIntersectionLinks(int minLength, int minCount){
         ArrayList<ArrayList<String>> gNodes = new ArrayList<ArrayList<String>>();
         for(GenLayer layer : allGLayers){
             ArrayList<String> currLayerGnodes = new ArrayList<String>();
@@ -455,7 +455,7 @@ public class IKASLRun {
             }
             gNodes.add(currLayerGnodes);
         }
-        ArrayList<String> links = linkGen.getFullLinks3(gNodes, 3, 5, allGNodeInputs);
+        ArrayList<String> links = linkGen.getFullLinks3(gNodes, minLength, minCount, allGNodeInputs);
         
         tListener.logMessage("\n");
         tListener.logMessage("Full Intersection Links -----------------------");
